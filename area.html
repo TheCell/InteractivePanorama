@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>obj laden
+</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+	body {
+		margin: 0px;
+		background-color: #AAA;
+		overflow: hidden;
+	}
+</style>
+</head>
+
+<body>
+<script src="js/three.js"></script>
+<script src="js/OBJLoader.js"></script>
+
+<script>
+
+var aaCamera, aaScene, aaRenderer;
+var aaMesh, aaObject;
+var aaAmbient, aaLight, aaNullMaterial;
+var noTurn;
+
+init();
+animate();
+
+function init()
+{
+	aaCamera = new THREE.PerspectiveCamera( 36.666, window.innerWidth / window.innerHeight, 1, 1000 );
+	aaCamera.position.z = 0;
+	aaCamera.position.y = 0;
+
+	aaScene = new THREE.Scene();
+	var c = new THREE.Color(0xFF8822);
+	aaScene.background = c;
+
+	aaAmbient = new THREE.AmbientLight( 0x505050 , 1.0);
+	aaScene.add(aaAmbient);
+
+	aaLight = new THREE.PointLight( 0xFFFFFF, 1.0, 0.0, 1.0);
+	aaLight.position.set(-300, 100, 200);
+	aaScene.add(aaLight);
+
+	/*
+	aaAchsen = new THREE.AxisHelper(500);
+	aaScene.add(aaAchsen);
+	aaAchsen.visible = true;
+	*/
+
+	//var texture = new THREE.TextureLoader().load( 'img/pano3.png' );
+	//texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+	//aaPanoMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+	aaPanoMaterial = new THREE.MeshLambertMaterial();
+	aaPanoMaterial.shading = THREE.SmoothShading;
+	//aaPanoMaterial.shading = THREE.FlatShading;
+	//aaPanoMaterial.side = THREE.DoubleSide;
+	var geometry = new THREE.BoxBufferGeometry( 150, 150, 150 );
+
+	var objFile = "objects/area.obj";
+	var loader = new THREE.OBJLoader();
+	console.log("laden: ");
+	loader.load( objFile, function( object )
+	{
+		aaObject = object;
+		aaObject.scale.set(1, 1, 1);
+		aaObject.children[0].material = aaPanoMaterial;
+		aaScene.add( aaObject );
+		console.log(objFile);
+	} );
+
+	aaRenderer = new THREE.WebGLRenderer( {antialias:true} );
+	aaRenderer.setPixelRatio( window.devicePixelRatio );
+	aaRenderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( aaRenderer.domElement );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+	window.addEventListener( 'click', onClick, false );
+	noTurn = false;
+}
+
+function onWindowResize()
+{
+	aaCamera.aspect = window.innerWidth / window.innerHeight;
+	aaCamera.updateProjectionMatrix();
+	aaRenderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function onClick()
+{
+	if (noTurn == true)
+	{
+		noTurn = false
+	}
+	else
+	{
+		noTurn = true
+	}
+}
+
+function animate()
+{
+	requestAnimationFrame( animate );
+	if (noTurn == false)
+	{
+		//aaObject.rotation.x += 0.005;
+		aaObject.rotation.y += 0.002;
+		aaRenderer.render( aaScene, aaCamera );
+	}
+}
+</script>
+</body>
+</html>
