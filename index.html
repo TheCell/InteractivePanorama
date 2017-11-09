@@ -28,7 +28,8 @@ var noTurn;
 init();
 animate();
 
-function init() {
+function init()
+{
 	aaCamera = new THREE.PerspectiveCamera( 36.666, window.innerWidth / window.innerHeight, 1, 1000 );
 	aaCamera.position.z = 0;
 	aaCamera.position.y = 0;
@@ -59,7 +60,8 @@ function init() {
 	var objFile = "objects/zylinder.obj";
 	var loader = new THREE.OBJLoader();
 	console.log("laden: ");
-	loader.load( objFile, function( object ) {
+	loader.load( objFile, function( object )
+	{
 		aaObject = object;
 		aaObject.scale.set(1, 1, 1);
 		aaObject.children[0].material = aaPanoMaterial;
@@ -71,29 +73,36 @@ function init() {
 	aaRenderer.setPixelRatio( window.devicePixelRatio );
 	aaRenderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( aaRenderer.domElement );
-	
+
 	window.addEventListener( 'resize', onWindowResize, false );
 	window.addEventListener( 'click', onClick, false );
 	noTurn = false;
 }
 
-function onWindowResize() {
+function onWindowResize()
+{
 	aaCamera.aspect = window.innerWidth / window.innerHeight;
 	aaCamera.updateProjectionMatrix();
 	aaRenderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-function onClick() {
-	if (noTurn == true) {
+function onClick()
+{
+	if (noTurn == true)
+	{
 		noTurn = false
-	} else {
+	}
+	else
+	{
 		noTurn = true
-	} 
+	}
 }
 
-function animate() {
+function animate()
+{
 	requestAnimationFrame( animate );
-	if (noTurn == false) {
+	if (noTurn == false)
+	{
 		//aaObject.rotation.x += 0.005;
 		aaObject.rotation.y += 0.002;
 		aaRenderer.render( aaScene, aaCamera );
