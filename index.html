@@ -1,17 +1,82 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset=utf-8>
-		<title>My first three.js app</title>
-		<style>
-			body { margin: 0; }
-			canvas { width: 100%; height: 100% }
-		</style>
-	</head>
-	<body>
-		<script src="js/three.js"></script>
-		<script>
-			// Our Javascript will go here.
-		</script>
-	</body>
+<head>
+<title>basics</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+	body {
+		margin: 0px;
+		background-color: #AAA;
+		overflow: hidden;
+	}
+</style>
+</head>
+
+<body>
+<script src="js/three.js"></script>
+
+<script>
+
+var aaCamera, aaScene, aaRenderer;
+var mesh;
+var aaAmbient, aaLight;
+init();
+animate();
+
+function init()
+{
+	aaCamera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+	aaCamera.position.z = 400;
+
+
+	aaScene = new THREE.Scene();
+	var c = new THREE.Color(0xFF8822);
+	aaScene.background = c;
+
+	aaAmbient = new THREE.AmbientLight( 0x303030 , 1.0);
+	aaScene.add(aaAmbient);
+
+	aaLight = new THREE.PointLight( 0xFFFFCC, 2.0, 0.0, 1.0);
+	aaLight.position.set(-300, 100, 200);
+	aaScene.add(aaLight);
+
+	aaAchsen = new THREE.AxisHelper(500);
+	aaScene.add(aaAchsen);
+	aaAchsen.visible = true;
+
+	var texture = new THREE.TextureLoader().load( 'textures/schlicker.jpg' );
+	var geometry = new THREE.BoxBufferGeometry( 150, 150, 150 );
+	// var material = new THREE.MeshBasicMaterial( { map: texture } );
+	//var material = new THREE.MeshLambertMaterial( { map: texture } );
+	// var material = new THREE.MeshLambertMaterial( {color:0x44AA22, wireframe:true} );
+	var material = new THREE.MeshLambertMaterial( {color:0x44AA22} );
+
+	mesh = new THREE.Mesh( geometry, material );
+	aaScene.add( mesh );
+
+	aaRenderer = new THREE.WebGLRenderer( {antialias:true} );
+	aaRenderer.setPixelRatio( window.devicePixelRatio );
+	aaRenderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( aaRenderer.domElement );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+}
+
+function onWindowResize()
+{
+	aaCamera.aspect = window.innerWidth / window.innerHeight;
+	aaCamera.updateProjectionMatrix();
+	aaRenderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function animate()
+{
+	requestAnimationFrame( animate );
+	mesh.rotation.x += 0.005;
+	mesh.rotation.y += 0.01;
+	aaRenderer.render( aaScene, aaCamera );
+}
+</script>
+</body>
 </html>
