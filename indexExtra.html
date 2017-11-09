@@ -30,24 +30,32 @@ animate();
 
 function init()
 {
-	//Perspektivische Kammera wird erstellt
 	aaCamera = new THREE.PerspectiveCamera( 36.666, window.innerWidth / window.innerHeight, 1, 1000 );
 	aaCamera.position.z = 0;
 	aaCamera.position.y = 0;
 
 	aaScene = new THREE.Scene();
 	var c = new THREE.Color(0xFF8822);
-	//Hintergrund Farbe wird gesetzt
 	aaScene.background = c;
 
+	aaAmbient = new THREE.AmbientLight( 0x505050 , 1.0);
+	aaScene.add(aaAmbient);
+
+	aaLight = new THREE.PointLight( 0xFFFFFF, 1.0, 0.0, 1.0);
+	aaLight.position.set(-300, 100, 200);
+	aaScene.add(aaLight);
+
+	aaAchsen = new THREE.AxisHelper(500);
+	aaScene.add(aaAchsen);
+	aaAchsen.visible = true;
+
 	var texture = new THREE.TextureLoader().load( 'img/pano4.png' );
-	//horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
 	aaPanoMaterial = new THREE.MeshBasicMaterial( { map: texture } );
 	aaPanoMaterial.shading = THREE.SmoothShading;
-	//definiert welceh Seite gerendert werden soll. Front,Back,Double
 	aaPanoMaterial.side = THREE.DoubleSide;
+	var geometry = new THREE.BoxBufferGeometry( 150, 150, 150 );
 
 	var objFile = "objects/zylinder.obj";
 	var loader = new THREE.OBJLoader();
