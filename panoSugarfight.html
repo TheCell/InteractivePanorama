@@ -49,7 +49,7 @@ function init()
 	aaLight = new THREE.PointLight( 0xFFFFFF, 1.0, 0.0, 1.0);
 	aaLight.position.set(-300, 100, 200);
 	aaScene.add(aaLight);
-	
+
 
 	var texture = new THREE.TextureLoader().load( 'img/singleshot.png' );
 	//horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
@@ -75,9 +75,8 @@ function init()
 	testMaterial.side = THREE.DoubleSide;
 	loader.load( obj2, function( object ) {
 		aaObject2 = object;
-		aaObject2.scale.set(.01, .01, .01);
-		aaObject2.position.y = -5;
-		aaObject2.position.z = -20;
+		aaObject2.scale.set(.043, .043, .043);
+		aaObject2.position.y = -80;
 		aaObject2.children.forEach(function(child){
 			child.material = testMaterial;
 		});
@@ -85,7 +84,7 @@ function init()
 		aaScene.add( aaObject2 );
 	} );
 
-	aaRenderer = new THREE.WebGLRenderer( {antialias:true} );
+	aaRenderer = new THREE.WebGLRenderer( {sntialias:true} );
 	aaRenderer.setPixelRatio( window.devicePixelRatio );
 	aaRenderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( aaRenderer.domElement );
@@ -167,6 +166,7 @@ function animate()
 	{
 		//aaObject.rotation.x += 0.005;
 		aaObject.rotation.y += 0.008;
+		aaObject2.rotation.y += 0.008;
 		aaRenderer.render( aaScene, aaCamera );
 	}
 	if(moveX){
