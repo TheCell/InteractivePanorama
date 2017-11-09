@@ -21,9 +21,13 @@
 <script>
 
 var aaCamera, aaScene, aaRenderer;
-var aaMesh, aaObject;
+var aaMesh, aaObject, aaObject2;
 var aaAmbient, aaLight, aaNullMaterial;
 var noTurn;
+var moveX,moveY,moveZ;
+var moveSpeedX,moveSpeedY,moveSpeedZ;
+var posXValue, posYValue, posZValue;
+
 
 init();
 animate();
@@ -40,6 +44,13 @@ function init()
 	//Hintergrund Farbe wird gesetzt
 	aaScene.background = c;
 
+	aaAmbient = new THREE.AmbientLight( 0x505050 , 1.0);
+	aaScene.add(aaAmbient);
+	aaLight = new THREE.PointLight( 0xFFFFFF, 1.0, 0.0, 1.0);
+	aaLight.position.set(-300, 100, 200);
+	aaScene.add(aaLight);
+	
+
 	var texture = new THREE.TextureLoader().load( 'img/singleshot.png' );
 	//horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -51,14 +62,27 @@ function init()
 
 	var objFile = "objects/zylinder.obj";
 	var loader = new THREE.OBJLoader();
-	console.log("laden: ");
 	loader.load( objFile, function( object )
 	{
 		aaObject = object;
 		aaObject.scale.set(1, 1, 1);
 		aaObject.children[0].material = aaPanoMaterial;
 		aaScene.add( aaObject );
-		console.log(objFile);
+	} );
+	var obj2 = "objects/test.obj";
+	var testMaterial = new THREE.MeshLambertMaterial();
+	testMaterial.color = new THREE.Color( 0x00ff00 );
+	testMaterial.side = THREE.DoubleSide;
+	loader.load( obj2, function( object ) {
+		aaObject2 = object;
+		aaObject2.scale.set(.01, .01, .01);
+		aaObject2.position.y = -5;
+		aaObject2.position.z = -20;
+		aaObject2.children.forEach(function(child){
+			child.material = testMaterial;
+		});
+		aaObject2.children[0].material = aaPanoMaterial;
+		aaScene.add( aaObject2 );
 	} );
 
 	aaRenderer = new THREE.WebGLRenderer( {antialias:true} );
@@ -68,7 +92,22 @@ function init()
 
 	window.addEventListener( 'resize', onWindowResize, false );
 	window.addEventListener( 'click', onClick, false );
+	window.addEventListener( 'keydown', onKeyPressed, false );
+	window.addEventListener( 'keyup', onKeyUp, false );
+
 	noTurn = false;
+	moveX = false;
+	moveY = false;
+	moveZ = false;
+	moveXMinus = false;
+	moveYMinus = false;
+	moveZMinus = false;
+	moveSpeedX = 1;
+	moveSpeedY = 1;
+	moveSpeedZ = 1;
+	posXValue = 0;
+	posYValue = 0;
+	posZValue = 0;
 }
 
 function onWindowResize()
@@ -89,7 +128,38 @@ function onClick()
 		noTurn = true
 	}
 }
-
+function onKeyPressed(event){
+	switch(event.keyCode){
+		case 87://W
+			moveZMinus = true;
+		break;
+		case 65://A
+			moveXMinus = true;
+		break;
+		case 83://S
+			moveZ = true;
+		break;
+		case 68://D
+			moveX = true;
+		break;
+	}
+}
+function onKeyUp(event){
+	switch(event.keyCode){
+		case 87://W
+			moveZMinus = false;
+		break;
+		case 65://A
+			moveXMinus = false;
+		break;
+		case 83://S
+			moveZ = false;
+		break;
+		case 68://D
+			moveX = false;
+		break;
+	}
+}
 function animate()
 {
 	requestAnimationFrame( animate );
@@ -99,6 +169,27 @@ function animate()
 		aaObject.rotation.y += 0.008;
 		aaRenderer.render( aaScene, aaCamera );
 	}
+	if(moveX){
+		posXValue += moveSpeedX;
+	}
+	if(moveY){
+		posYValue += moveSpeedY;
+	}
+	if(moveZ){
+		posZValue += moveSpeedZ;
+	}
+	if(moveXMinus){
+		posXValue -= moveSpeedX;
+	}
+	if(moveYMinus){
+		posYValue -= moveSpeedY;
+	}
+	if(moveZMinus){
+		posZValue -= moveSpeedZ;
+	}
+	aaCamera.position.x = posXValue;
+	aaCamera.position.y = posYValue;
+	aaCamera.position.z = posZValue;
 }
 </script>
 </body>
