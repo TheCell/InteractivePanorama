@@ -24,6 +24,9 @@ var aaCamera, aaScene, aaRenderer;
 var aaMesh, aaObject;
 var aaAmbient, aaLight, aaNullMaterial;
 var noTurn;
+var enableTurn = false;
+var turnX = 0;
+var turnY = 0;
 
 init();
 animate();
@@ -80,6 +83,9 @@ function init()
 
 	window.addEventListener( 'resize', onWindowResize, false );
 	window.addEventListener( 'click', onClick, false );
+	window.addEventListener( 'mousedown', onMouseDown, false );
+	window.addEventListener( 'mouseup',   onMouseUp,   false );
+	window.addEventListener( 'mousemove', onMouseMove, false );
 	noTurn = false;
 }
 
@@ -108,10 +114,31 @@ function animate()
 	if (noTurn == false)
 	{
 		//aaObject.rotation.x += 0.005;
-		aaObject.rotation.y += 0.002;
+		//aaObject.rotation.y += 0.002;
+		aaObject.rotation.x = turnY;
+		aaObject.rotation.y = turnX;
 		aaRenderer.render( aaScene, aaCamera );
 	}
 }
+
+function onMouseMove( event )
+{
+	var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+	var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+	if (enableTurn == true)
+	{
+		turnX += movementX * -0.002;
+		turnY += movementY * -0.002;
+	}
+}
+
+function onMouseDown( event ) { enableTurn = true; }
+function onMouseUp  ( event ) { enableTurn = false; }
+
+
+init();
+animate();
 </script>
 </body>
 </html>
