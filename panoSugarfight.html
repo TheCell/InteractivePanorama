@@ -60,27 +60,31 @@ function init()
 	//definiert welceh Seite gerendert werden soll. Front,Back,Double
 	aaPanoMaterial.side = THREE.DoubleSide;
 
-	var objFile = "objects/zylinder.obj";
+	//var objFile = "objects/zylinder.obj";
 	var loader = new THREE.OBJLoader();
-	loader.load( objFile, function( object )
+	/*loader.load( objFile, function( object )
 	{
 		aaObject = object;
 		aaObject.scale.set(1, 1, 1);
 		aaObject.children[0].material = aaPanoMaterial;
 		aaScene.add( aaObject );
-	} );
+	} );*/
 	var obj2 = "objects/test.obj";
-	var testMaterial = new THREE.MeshLambertMaterial();
-	testMaterial.color = new THREE.Color( 0x00ff00 );
-	testMaterial.side = THREE.DoubleSide;
+	var soldierMaterial = new THREE.MeshLambertMaterial();
+	soldierMaterial.color = new THREE.Color( 0x00ff00 );
+	soldierMaterial.side = THREE.DoubleSide;
+	var floorMaterial = new THREE.MeshLambertMaterial();
+	floorMaterial.color = new THREE.Color( 0xFFFFFF);
+	floorMaterial.side = THREE.DoubleSide;
 	loader.load( obj2, function( object ) {
 		aaObject2 = object;
 		aaObject2.scale.set(.043, .043, .043);
 		aaObject2.position.y = -80;
 		aaObject2.children.forEach(function(child){
-			child.material = testMaterial;
+			child.material = soldierMaterial;
 		});
 		aaObject2.children[0].material = aaPanoMaterial;
+		aaObject2.children[1].material = floorMaterial;
 		aaScene.add( aaObject2 );
 	} );
 
@@ -165,7 +169,7 @@ function animate()
 	if (noTurn == false)
 	{
 		//aaObject.rotation.x += 0.005;
-		aaObject.rotation.y += 0.008;
+		//aaObject.rotation.y += 0.008;
 		aaObject2.rotation.y += 0.008;
 		aaRenderer.render( aaScene, aaCamera );
 	}
