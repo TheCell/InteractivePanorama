@@ -59,11 +59,15 @@ function init()
 
 	var texture = new THREE.TextureLoader().load( 'img/singleshot.png' );
 	var texturePlank = new THREE.TextureLoader().load( 'img/Textures/woodenPlanksAll.png' );
+	var textureWand = new THREE.TextureLoader().load( 'img/Textures/wand.png' );
 	texturePlank.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	textureWand.wrapS = texture.wrapT = THREE.RepeatWrapping;
 	plankMaterial = new THREE.MeshBasicMaterial( { map: texturePlank } );
 	plankMaterial.shading = THREE.SmoothShading;
 	plankMaterial.side = THREE.DoubleSide;
-
+	wandMaterial = new THREE.MeshBasicMaterial( { map: textureWand } );
+	wandMaterial.shading = THREE.SmoothShading;
+	wandMaterial.side = THREE.DoubleSide;
 	//horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
 	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
@@ -99,6 +103,10 @@ function init()
 			if (child.name == "AufzugHolz" || child.name == "AufzugHolz2")
 			{
 				child.material = plankMaterial;
+			}
+			if (child.name == "Wand")
+			{
+				child.material = wandMaterial;
 			}
 		});/*
 		aaObject2.children[0].material = aaPanoMaterial;
