@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>obj laden
+<title>
+	Liftorama
 </title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <style>
-	body {
+	body
+	{
 		margin: 0px;
 		background-color: #AAA;
 		overflow: hidden;
@@ -20,86 +22,316 @@
 
 <script>
 
-var aaCamera, aaScene, aaRenderer;
-var aaMesh, aaObject;
-var aaAmbient, aaLight, aaNullMaterial;
-var noTurn;
+var ambientLight, pointLight;
+var userCamera;
+var elevatorScene;
+var elevatorRenderer;
+var moveX,moveY,moveZ;
+var moveSpeedX,moveSpeedY,moveSpeedZ;
+var posXValue, posYValue, posZValue;
+var moveXMinus, moveYMinus, moveZMinus;
+var enableTurn = false;
+var turnX = 0.00;
+var turnY = -1.5;
+var turnZ = 0.00;
+var panoXTurn = 0.00;
+
+var raycaster;
+var mouse;
+var objects = []; // all objects that are interactable;
+var panoramaTextureArray = [];
+var pano1Material;
+var pano2Material;
+var plankMaterial;
+var debugMode = true;
 
 init();
-animate();
 
 function init()
 {
+	"use strict"
 	//Perspektivische Kammera wird erstellt
-	aaCamera = new THREE.PerspectiveCamera( 36.666, window.innerWidth / window.innerHeight, 1, 1000 );
-	aaCamera.position.z = 0;
-	aaCamera.position.y = 0;
+	userCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
+	userCamera.position.z = 2;
+	userCamera.position.y = 0;
+	userCamera.position.x = -20;
 
-	aaScene = new THREE.Scene();
-	var c = new THREE.Color(0xFF8822);
-	//Hintergrund Farbe wird gesetzt
-	aaScene.background = c;
+	// Scene erstellen
+	elevatorScene = new THREE.Scene();
+	// Hintergrund Farbe wird gesetzt
+	var backgroundColor = new THREE.Color(0xFF8822);
+	elevatorScene.background = backgroundColor;
 
-	var texture = new THREE.TextureLoader().load( 'img/pano4.png' );
-	//horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
-	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+	// add Lightsources
+	ambientLight = new THREE.AmbientLight( 0x505050 , 1.0);
+	elevatorScene.add(ambientLight);
+	pointLight = new THREE.PointLight( 0xFFFFFF, 1.0, 0.0, 1.0);
+	pointLight.position.set(-300, 100, 200);
+	elevatorScene.add(pointLight);
 
-	aaPanoMaterial = new THREE.MeshBasicMaterial( { map: texture } );
-	aaPanoMaterial.shading = THREE.SmoothShading;
-	//definiert welceh Seite gerendert werden soll. Front,Back,Double
-	aaPanoMaterial.side = THREE.DoubleSide;
+	loadPanoramas();
+	setupMaterials();
 
-	var objFile = "objects/zylinder.obj";
+	// load the complete Scene
+	var objFile = "objects/SceneAufzug.obj";
 	var loader = new THREE.OBJLoader();
-	console.log("laden: ");
 	loader.load( objFile, function( object )
 	{
-		aaObject = object;
-		aaObject.scale.set(1, 1, 1);
-		aaObject.children[0].material = aaPanoMaterial;
-		aaScene.add( aaObject );
-		console.log(objFile);
+		object.scale.set(1, 1, 1);
+		object.children[0].material = pano1Material;
+		object.children.forEach( function (obj, index)
+		{
+			if (obj.name == "zylinderUnten")
+			{
+				obj.material = pano1Material;
+			}
+			else if (obj.name == "zylinderOben")
+			{
+				obj.material = pano2Material;
+			}
+			else if (obj.name == "Wand")
+			{
+				obj.material = pano1Material;
+			}
+			else if (obj.name == "Aufzug")
+			{
+				obj.material = pano1Material;
+			}
+			else if (obj.name == "AufzugHolz")
+			{
+				obj.material = plankMaterial;
+			}
+			else if (obj.name == "AufzugHolz2")
+			{
+				obj.material = plankMaterial;
+			}
+
+			objects.push( obj );
+		});
+
+		elevatorScene.add( object );
 	} );
 
-	aaRenderer = new THREE.WebGLRenderer( {antialias:true} );
-	aaRenderer.setPixelRatio( window.devicePixelRatio );
-	aaRenderer.setSize( window.innerWidth, window.innerHeight );
-	document.body.appendChild( aaRenderer.domElement );
+	// setup renderer
+	elevatorRenderer = new THREE.WebGLRenderer( {antialias: true} );
+	elevatorRenderer.setPixelRatio( window.devicePixelRatio );
+	elevatorRenderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( elevatorRenderer.domElement );
+
+	moveX = false;
+	moveY = false;
+	moveZ = false;
+	moveXMinus = false;
+	moveYMinus = false;
+	moveZMinus = false;
+	moveSpeedX = 1;
+	moveSpeedY = 1;
+	moveSpeedZ = 1;
+	posXValue = 0;
+	posYValue = 0;
+	posZValue = 0;
 
 	window.addEventListener( 'resize', onWindowResize, false );
-	window.addEventListener( 'click', onClick, false );
-	noTurn = false;
+	window.addEventListener( 'keydown', onKeyPressed, false );
+	window.addEventListener( 'keyup', onKeyUp, false );
+	window.addEventListener( 'mouseup',   onMouseUp, false );
+	window.addEventListener( 'mousemove', onMouseMove, false );
+	window.addEventListener( 'mousedown', onMouseDown, false );
+	window.addEventListener( 'mouseup', onMouseUp, false );
+
+	animate();
+}
+
+function loadPanoramas()
+{
+	// Load all Panoramas
+	if (debugMode)
+	{
+		console.log("loading All Panoramas");
+	}
+	panoramaTextureArray[0] = new THREE.TextureLoader().load( 'img/singleshot.png' );
+	panoramaTextureArray[1] = new THREE.TextureLoader().load( 'img/BallSackDogPano.png' );
+
+	panoramaTextureArray.forEach( function (element, index)
+	{
+		// horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
+		panoramaTextureArray[index].wrapS = THREE.RepeatWrapping;
+		panoramaTextureArray[index].wrapT = THREE.RepeatWrapping;
+	});
+	if (debugMode)
+	{
+		console.log("loading All Panoramas finished");
+	}
+}
+
+function setupMaterials()
+{
+	// setup both Panorama Materials
+	pano1Material = new THREE.MeshBasicMaterial(
+		{
+			map: panoramaTextureArray[0]
+		}
+	);
+	pano1Material.shading = THREE.SmoothShading;
+	//definiert welche Seite gerendert werden soll. Front,Back,Double
+	pano1Material.side = THREE.DoubleSide;
+
+	pano2Material = new THREE.MeshBasicMaterial(
+		{
+			map: panoramaTextureArray[1]
+		}
+	);
+	pano2Material.shading = THREE.SmoothShading;
+	//definiert welche Seite gerendert werden soll. Front,Back,Double
+	pano2Material.side = THREE.DoubleSide;
+
+	let texturePlank = new THREE.TextureLoader().load( 'img/Textures/woodenPlanksAll.png' );
+	texturePlank.wrapS = texturePlank.wrapT = THREE.RepeatWrapping;
+	plankMaterial = new THREE.MeshBasicMaterial( { map: texturePlank } );
+	plankMaterial.shading = THREE.SmoothShading;
+	plankMaterial.side = THREE.DoubleSide;
 }
 
 function onWindowResize()
 {
-	aaCamera.aspect = window.innerWidth / window.innerHeight;
-	aaCamera.updateProjectionMatrix();
-	aaRenderer.setSize( window.innerWidth, window.innerHeight );
+	userCamera.aspect = window.innerWidth / window.innerHeight;
+	userCamera.updateProjectionMatrix();
+	elevatorRenderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-function onClick()
+function onKeyPressed(event)
 {
-	if (noTurn == true)
+	switch(event.keyCode)
 	{
-		noTurn = false
+		case 87://W
+			moveX = true;
+		break;
+		case 65://A
+			moveZMinus = true;
+		break;
+		case 83://S
+			moveXMinus = true;
+		break;
+		case 68://D
+			moveZ = true;
+		break;
+		case 32://space
+			moveY = true;
+		break;
+		case 16://shiftleft
+			moveYMinus = true;
+		break;
 	}
-	else
+}
+
+function onKeyUp(event)
+{
+	switch(event.keyCode)
 	{
-		noTurn = true
+		case 87://W
+			moveX = false;
+		break;
+		case 65://A
+			moveZMinus = false;
+		break;
+		case 83://S
+			moveXMinus = false;
+		break;
+		case 68://D
+			moveZ = false;
+		break;
+		case 32://space
+			moveY = false;
+		break;
+		case 16://shiftleft
+			moveYMinus = false;
+		break;
 	}
 }
 
 function animate()
 {
 	requestAnimationFrame( animate );
-	if (noTurn == false)
+	elevatorRenderer.render( elevatorScene, userCamera );
+
+	if(moveX)
 	{
-		//aaObject.rotation.x += 0.005;
-		aaObject.rotation.y += 0.002;
-		aaRenderer.render( aaScene, aaCamera );
+		posXValue += moveSpeedX;
+	}
+	if(moveY)
+	{
+		posYValue += moveSpeedY;
+	}
+	if(moveZ)
+	{
+		posZValue += moveSpeedZ;
+	}
+	if(moveXMinus)
+	{
+		posXValue -= moveSpeedX;
+	}
+	if(moveYMinus)
+	{
+		posYValue -= moveSpeedY;
+	}
+	if(moveZMinus)
+	{
+		posZValue -= moveSpeedZ;
+	}
+
+	userCamera.rotation.x = turnX;
+	userCamera.rotation.y = turnY;
+	userCamera.rotation.z = turnZ;
+
+	userCamera.position.x = posXValue;
+	userCamera.position.y = posYValue;
+	userCamera.position.z = posZValue;
+
+	objects.forEach( function (object, index)
+	{
+		if (object.name == "zylinderOben" || object.name == "zylinderUnten")
+		{
+			object.rotation.y = panoXTurn
+		}
+	});
+}
+
+function onMouseMove( event )
+{
+	var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+	var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+	if (enableTurn == false)
+	{
+		// yes they are inverted and this needs to be
+		//turnZ += movementY * -0.002;
+		//turnY += movementX * -0.002;
+	}
+	else
+	{
+		panoXTurn += movementX * -0.01;
 	}
 }
+
+function onMouseDown( event ) { enableTurn = true; }
+function onMouseUp  ( event ) { enableTurn = false; }
+
+/*
+var customMaterial = new THREE.ShaderMaterial(
+{
+
+	uniforms:
+	{
+
+		time: { value: 1.0 },
+		resolution: { value: new THREE.Vector2() }
+
+	},
+
+	vertexShader: document.getElementById( 'customMaterialVertexShader' ).textContent,
+	fragmentShader: document.getElementById( 'customMaterialFragmentShader' ).textContent
+} );
+*/
 </script>
 </body>
 </html>
