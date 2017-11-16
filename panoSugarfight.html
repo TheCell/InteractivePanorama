@@ -27,6 +27,11 @@ var noTurn;
 var moveX,moveY,moveZ;
 var moveSpeedX,moveSpeedY,moveSpeedZ;
 var posXValue, posYValue, posZValue;
+var floorMaterial;
+
+var raycaster;
+var mouse;
+var objects = []; // all objects that are interactable;
 
 
 init();
@@ -73,7 +78,7 @@ function init()
 	var soldierMaterial = new THREE.MeshLambertMaterial();
 	soldierMaterial.color = new THREE.Color( 0x00ff00 );
 	soldierMaterial.side = THREE.DoubleSide;
-	var floorMaterial = new THREE.MeshLambertMaterial();
+	floorMaterial = new THREE.MeshLambertMaterial();
 	floorMaterial.color = new THREE.Color( 0xFFFFFF);
 	floorMaterial.side = THREE.DoubleSide;
 	loader.load( obj2, function( object ) {
@@ -86,6 +91,11 @@ function init()
 		aaObject2.children[0].material = aaPanoMaterial;
 		aaObject2.children[1].material = floorMaterial;
 		aaScene.add( aaObject2 );
+
+		aaObject2.children.forEach( function(element, index, arr)
+		{
+			objects.push(element);
+		})
 	} );
 
 	aaRenderer = new THREE.WebGLRenderer( {sntialias:true} );
@@ -111,6 +121,9 @@ function init()
 	posXValue = 0;
 	posYValue = 0;
 	posZValue = 0;
+
+	raycaster = new THREE.Raycaster();
+	mouse = new THREE.Vector2();
 }
 
 function onWindowResize()
@@ -120,7 +133,7 @@ function onWindowResize()
 	aaRenderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-function onClick()
+function onClick( event )
 {
 	if (noTurn == true)
 	{
@@ -130,9 +143,29 @@ function onClick()
 	{
 		noTurn = true
 	}
+
+	mouse.x = ( event.clientX / aaRenderer.domElement.clientWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / aaRenderer.domElement.clientHeight ) * 2 + 1;
+	raycaster.setFromCamera( mouse, aaCamera );
+	var intersects = raycaster.intersectObjects( objects );
+	console.log("intersects", intersects);
+
+	if ( intersects.length > 0 )
+	{
+		//intersects[ 0 ].object.material.color.setHex( Math.random() * 0xff00ff );
+		intersects[ 0 ].object.material = floorMaterial;
+		/*
+		var particle = new THREE.Sprite( particleMaterial );
+		particle.position.copy( intersects[ 0 ].point );
+		particle.scale.x = particle.scale.y = 16;
+		aaScene.add( particle );
+		*/
+	}
 }
-function onKeyPressed(event){
-	switch(event.keyCode){
+function onKeyPressed(event)
+{
+	switch(event.keyCode)
+	{
 		case 87://W
 			moveZMinus = true;
 		break;
@@ -147,8 +180,10 @@ function onKeyPressed(event){
 		break;
 	}
 }
-function onKeyUp(event){
-	switch(event.keyCode){
+function onKeyUp(event)
+{
+	switch(event.keyCode)
+	{
 		case 87://W
 			moveZMinus = false;
 		break;
@@ -173,22 +208,28 @@ function animate()
 		aaObject2.rotation.y += 0.008;
 		aaRenderer.render( aaScene, aaCamera );
 	}
-	if(moveX){
+	if(moveX)
+	{
 		posXValue += moveSpeedX;
 	}
-	if(moveY){
+	if(moveY)
+	{
 		posYValue += moveSpeedY;
 	}
-	if(moveZ){
+	if(moveZ)
+	{
 		posZValue += moveSpeedZ;
 	}
-	if(moveXMinus){
+	if(moveXMinus)
+	{
 		posXValue -= moveSpeedX;
 	}
-	if(moveYMinus){
+	if(moveYMinus)
+	{
 		posYValue -= moveSpeedY;
 	}
-	if(moveZMinus){
+	if(moveZMinus)
+	{
 		posZValue -= moveSpeedZ;
 	}
 	aaCamera.position.x = posXValue;
