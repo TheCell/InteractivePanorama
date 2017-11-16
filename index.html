@@ -91,11 +91,11 @@ function init()
 			}
 			else if (obj.name == "Wand")
 			{
-				obj.material = pano1Material;
+				obj.material = wallMaterial;
 			}
 			else if (obj.name == "Aufzug")
 			{
-				obj.material = pano1Material;
+				obj.material = elevatorMaterial;
 			}
 			else if (obj.name == "AufzugHolz")
 			{
@@ -190,6 +190,18 @@ function setupMaterials()
 	plankMaterial = new THREE.MeshBasicMaterial( { map: texturePlank } );
 	plankMaterial.shading = THREE.SmoothShading;
 	plankMaterial.side = THREE.DoubleSide;
+
+	let textureWall = new THREE.TextureLoader().load( 'img/Textures/wand.png' );
+	textureWall.wrapS = textureWall.wrapT = THREE.RepeatWrapping;
+	wallMaterial = new THREE.MeshBasicMaterial( { map: textureWall } );
+	wallMaterial.shading = THREE.SmoothShading;
+	wallMaterial.side = THREE.DoubleSide;
+
+	let textureElevator = new THREE.TextureLoader().load( 'img/Textures/aufzug.png' );
+	textureElevator.wrapS = textureElevator.wrapT = THREE.RepeatWrapping;
+	elevatorMaterial = new THREE.MeshBasicMaterial( { map: textureElevator } );
+	elevatorMaterial.shading = THREE.SmoothShading;
+	elevatorMaterial.side = THREE.DoubleSide;
 }
 
 function onWindowResize()
