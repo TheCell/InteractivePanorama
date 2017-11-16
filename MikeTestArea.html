@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>obj laden
+</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+	body {
+		margin: 0px;
+		background-color: #AAA;
+		overflow: hidden;
+	}
+</style>
+</head>
+
+<body>
+<script src="js/three.js"></script>
+<script src="js/OBJLoader.js"></script>
+
+<script>
+
+var aaCamera, aaScene, aaRenderer;
+var aaMesh, aaObject, aaObject2;
+var aaAmbient, aaLight, aaNullMaterial;
+var noTurn;
+var moveX,moveY,moveZ;
+var moveSpeedX,moveSpeedY,moveSpeedZ;
+var posXValue, posYValue, posZValue;
+var floorMaterial;
+
+var raycaster;
+var mouse;
+var objects = []; // all objects that are interactable;
+
+
+init();
+animate();
+
+function init()
+{
+	//Perspektivische Kammera wird erstellt
+	aaCamera = new THREE.PerspectiveCamera( 36.666, window.innerWidth / window.innerHeight, 1, 1000 );
+	aaCamera.position.z = 0;
+	aaCamera.position.y = 0;
+
+	aaScene = new THREE.Scene();
+	var c = new THREE.Color(0xFF8822);
+	//Hintergrund Farbe wird gesetzt
+	aaScene.background = c;
+
+	aaAmbient = new THREE.AmbientLight( 0x505050 , 1.0);
+	aaScene.add(aaAmbient);
+	aaLight = new THREE.PointLight( 0xFFFFFF, 1.0, 0.0, 1.0);
+	aaLight.position.set(-300, 100, 200);
+	aaScene.add(aaLight);
+
+
+	var texture = new THREE.TextureLoader().load( 'img/singleshot.png' );
+	//horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
+	texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+
+	aaPanoMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+	aaPanoMaterial.shading = THREE.SmoothShading;
+	//definiert welceh Seite gerendert werden soll. Front,Back,Double
+	aaPanoMaterial.side = THREE.DoubleSide;
+
+	//var objFile = "objects/zylinder.obj";
+	var loader = new THREE.OBJLoader();
+	/*loader.load( objFile, function( object )
+	{
+		aaObject = object;
+		aaObject.scale.set(1, 1, 1);
+		aaObject.children[0].material = aaPanoMaterial;
+		aaScene.add( aaObject );
+	} );*/
+	var obj2 = "objects/SceneAufzug.obj";
+	var soldierMaterial = new THREE.MeshLambertMaterial();
+	soldierMaterial.color = new THREE.Color( 0x00ff00 );
+	soldierMaterial.side = THREE.DoubleSide;
+	floorMaterial = new THREE.MeshLambertMaterial();
+	floorMaterial.color = new THREE.Color( 0xFFFFFF);
+	floorMaterial.side = THREE.DoubleSide;
+	loader.load( obj2, function( object ) {
+		aaObject2 = object;
+		/*aaObject2.scale.set(.043, .043, .043);
+		aaObject2.position.y = -80;
+		*/aaObject2.children.forEach(function(child){
+			child.material = aaPanoMaterial;
+		});/*
+		aaObject2.children[0].material = aaPanoMaterial;
+		aaObject2.children[1].material = floorMaterial;
+		*/
+		aaScene.add( aaObject2 );
+		aaObject2.children.forEach( function(element, index, arr)
+		{
+			objects.push(element);
+		})
+	} );
+
+	aaRenderer = new THREE.WebGLRenderer( {sntialias:true} );
+	aaRenderer.setPixelRatio( window.devicePixelRatio );
+	aaRenderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( aaRenderer.domElement );
+
+	window.addEventListener( 'resize', onWindowResize, false );
+	window.addEventListener( 'click', onClick, false );
+	window.addEventListener( 'keydown', onKeyPressed, false );
+	window.addEventListener( 'keyup', onKeyUp, false );
+
+	noTurn = false;
+	moveX = false;
+	moveY = false;
+	moveZ = false;
+	moveXMinus = false;
+	moveYMinus = false;
+	moveZMinus = false;
+	moveSpeedX = 1;
+	moveSpeedY = 1;
+	moveSpeedZ = 1;
+	posXValue = 0;
+	posYValue = 0;
+	posZValue = 0;
+
+	raycaster = new THREE.Raycaster();
+	mouse = new THREE.Vector2();
+}
+
+function onWindowResize()
+{
+	aaCamera.aspect = window.innerWidth / window.innerHeight;
+	aaCamera.updateProjectionMatrix();
+	aaRenderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+function onClick( event )
+{
+	if (noTurn == true)
+	{
+		noTurn = false
+	}
+	else
+	{
+		noTurn = true
+	}
+
+	mouse.x = ( event.clientX / aaRenderer.domElement.clientWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / aaRenderer.domElement.clientHeight ) * 2 + 1;
+	raycaster.setFromCamera( mouse, aaCamera );
+	var intersects = raycaster.intersectObjects( objects );
+	console.log("intersects", intersects);
+
+	if ( intersects.length > 0 )
+	{
+		//intersects[ 0 ].object.material.color.setHex( Math.random() * 0xff00ff );
+		intersects[ 0 ].object.material = floorMaterial;
+		/*
+		var particle = new THREE.Sprite( particleMaterial );
+		particle.position.copy( intersects[ 0 ].point );
+		particle.scale.x = particle.scale.y = 16;
+		aaScene.add( particle );
+		*/
+	}
+}
+function onKeyPressed(event)
+{
+	switch(event.keyCode)
+	{
+		case 87://W
+			moveZMinus = true;
+		break;
+		case 65://A
+			moveXMinus = true;
+		break;
+		case 83://S
+			moveZ = true;
+		break;
+		case 68://D
+			moveX = true;
+		break;
+	}
+}
+function onKeyUp(event)
+{
+	switch(event.keyCode)
+	{
+		case 87://W
+			moveZMinus = false;
+		break;
+		case 65://A
+			moveXMinus = false;
+		break;
+		case 83://S
+			moveZ = false;
+		break;
+		case 68://D
+			moveX = false;
+		break;
+	}
+}
+function animate()
+{
+	requestAnimationFrame( animate );
+	if (noTurn == false)
+	{
+		//aaObject.rotation.x += 0.005;
+		//aaObject.rotation.y += 0.008;
+		aaObject2.rotation.y += 0.008;
+		aaRenderer.render( aaScene, aaCamera );
+	}
+	if(moveX)
+	{
+		posXValue += moveSpeedX;
+	}
+	if(moveY)
+	{
+		posYValue += moveSpeedY;
+	}
+	if(moveZ)
+	{
+		posZValue += moveSpeedZ;
+	}
+	if(moveXMinus)
+	{
+		posXValue -= moveSpeedX;
+	}
+	if(moveYMinus)
+	{
+		posYValue -= moveSpeedY;
+	}
+	if(moveZMinus)
+	{
+		posZValue -= moveSpeedZ;
+	}
+	aaCamera.position.x = posXValue;
+	aaCamera.position.y = posYValue;
+	aaCamera.position.z = posZValue;
+}
+</script>
+</body>
+</html>
