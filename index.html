@@ -17,6 +17,10 @@
 </head>
 
 <body>
+<div id="sounds">
+	<audio id="elevatorMusic1" class="audioMute" autoplay loop volume="0" src="audio/ambientVoices.wav"></audio>
+	<audio id="elevatorMusic2" class="audioMute" autoplay loop volume="0" src="audio/3stopengine.wav"></audio>
+</div>
 <script src="js/three.js"></script>
 <script src="js/OBJLoader.js"></script>
 
@@ -59,7 +63,8 @@ let numPadMaterial;
 let debugMode = true;
 let panoTopTextureIndex;
 let panoBottomTextureIndex;
-
+//audio
+let currentAudio = document.getElementById("elevatorMusic1");
 // elevator movement
 let elevatorIsMoving = false;
 let elevatorMoveStartedTimestamp = new Date();
@@ -97,6 +102,7 @@ function init()
 	pointLight.position.set(-300, 100, 200);
 	elevatorScene.add(pointLight);
 
+	setupAudioVolume();
 	loadPanoramas();
 	setupMaterials();
 
@@ -176,10 +182,13 @@ function init()
 	posYValue = 0;
 	posZValue = 0;
 
+	raycaster = new THREE.Raycaster();
+	mouse = new THREE.Vector2();
+
 	window.addEventListener( 'resize', onWindowResize, false );
 	window.addEventListener( 'keydown', onKeyPressed, false );
 	window.addEventListener( 'keyup', onKeyUp, false );
-	window.addEventListener( 'mouseup',   onMouseUp, false );
+	window.addEventListener( 'click', onClick, false );
 	window.addEventListener( 'mousemove', onMouseMove, false );
 	window.addEventListener( 'mousedown', onMouseDown, false );
 	window.addEventListener( 'mouseup', onMouseUp, false );
@@ -240,6 +249,13 @@ function loadPanoramas()
 	if (debugMode)
 	{
 		console.log("loading All Panoramas finished");
+	}
+}
+
+function setupAudioVolume(){
+	let audioTags = document.getElementsByClassName("audioMute");
+	for (let i = 1; i < audioTags.length; i++) {
+    	audioTags[i].volume = "0";
 	}
 }
 
@@ -443,6 +459,54 @@ function onMouseMove( event )
 
 function onMouseDown( event ) { enableTurn = true; }
 function onMouseUp  ( event ) { enableTurn = false; }
+function onClick  ( event )
+{
+	mouse.x = ( event.clientX / elevatorRenderer.domElement.clientWidth ) * 2 - 1;
+	mouse.y = - ( event.clientY / elevatorRenderer.domElement.clientHeight ) * 2 + 1;
+	raycaster.setFromCamera( mouse, userCamera );
+	var intersects = raycaster.intersectObjects( objects );
+	if ( intersects.length > 0 )
+	{
+		switch(intersects[0].object.name){
+			case "ButtonRauf":
+				//LiftRaufFunktion TODO
+				break;
+			case "ButtonRunter":
+				//LiftRunterFunktion TODO
+				break;
+			case "ButtonRandomFloor":
+				//LiftRandomFloorFunktion TODO
+				break;
+			case "ButtonMusik1":
+				if(currentAudio.id != "elevatorMusic1"){
+					currentAudio.volume = 0;
+					currentAudio = document.getElementById("elevatorMusic1");
+					currentAudio.volume = 1;
+			  	}else if(currentAudio.volume == 0){
+			  		currentAudio.volume = 1;
+			  	}else{
+			  		currentAudio.volume = 0;
+			  	}
+				//LiftMusikändernFunktion TODO
+				break;
+			case "ButtonMusik2":
+				if(currentAudio.id != "elevatorMusic2"){
+					currentAudio.volume = 0;
+					currentAudio = document.getElementById("elevatorMusic2");
+					currentAudio.volume = 1;
+			  	}else if(currentAudio.volume == 0){
+			  		currentAudio.volume = 1;
+			  	}else{
+			  		currentAudio.volume = 0;
+			  	}
+				//LiftMusikänderFunktion TODO
+				break;
+			case "NumPad":
+				//Numpadfunktion TODO
+				break;
+		}
+	}
+}
 
 function replaceTextureOnMaterial( glTexture, isPanoTop = true )
 {
