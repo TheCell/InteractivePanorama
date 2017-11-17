@@ -347,15 +347,12 @@ function animate()
 	userCamera.position.y = posYValue;
 	userCamera.position.z = posZValue;
 
-	objects.forEach( function (object, index)
-	{
-		if (object.name == "zylinderOben" || object.name == "zylinderUnten")
-		{
-			object.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
-			object.rotation.y = panoXTurn
-			object.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
-		}
-	});
+	panoTopObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
+	panoTopObj.rotation.y = panoXTurn
+	panoTopObj.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
+	panoBottomObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
+	panoBottomObj.rotation.y = panoXTurn
+	panoBottomObj.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
 }
 
 function onMouseMove( event )
