@@ -21,39 +21,44 @@
 <script src="js/OBJLoader.js"></script>
 
 <script>
+"use strict";
 
-var ambientLight, pointLight;
-var userCamera;
-var elevatorScene;
-var elevatorRenderer;
-var moveX,moveY,moveZ;
-var moveSpeedX,moveSpeedY,moveSpeedZ;
-var posXValue, posYValue, posZValue;
-var moveXMinus, moveYMinus, moveZMinus;
-var enableTurn = false;
-var turnX = 0.00;
-var turnY = -1.5;
-var turnZ = 0.00;
-var panoXTurn = 0.00;
+let ambientLight, pointLight;
+let userCamera;
+let elevatorScene;
+let elevatorRenderer;
+let panoTopObj;
+let panoBottomObj;
+let moveX,moveY,moveZ;
+let moveSpeedX,moveSpeedY,moveSpeedZ;
+let posXValue, posYValue, posZValue;
+let moveXMinus, moveYMinus, moveZMinus;
+let enableTurn = false;
+let turnX = 0.00;
+let turnY = -1.5;
+let turnZ = 0.00;
+let panoXTurn = 0.00;
 const X_AXIS_VECTOR =  new THREE.Vector3( 1, 0, 0 );
 
-var raycaster;
-var mouse;
-var objects = []; // all objects that are interactable;
-var panoramaTextureArray = [];
-var pano1Material;
-var pano2Material;
-var plankMaterial;
-var debugMode = true;
+let raycaster;
+let mouse;
+let objects = []; // all objects that are interactable;
+let panoramaTextureArray = [];
+let pano1Material;
+let pano2Material;
+let plankMaterial;
+let wallMaterial;
+let elevatorMaterial;
+let debugMode = true;
+let panoTopTextureIndex;
+let panoBottomTextureIndex;
 
 init();
 
 function init()
 {
-	"use strict";
-
 	//Perspektivische Kammera wird erstellt
-	userCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 1, 1000 );
+	userCamera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 1, 1000 );
 	userCamera.position.z = 2;
 	userCamera.position.y = 0;
 	userCamera.position.x = -20;
@@ -86,11 +91,13 @@ function init()
 			if (obj.name == "zylinderUnten")
 			{
 				obj.material = pano1Material;
+				panoTopObj = obj;
 				//obj.scale.set(1, 0.33, 1);
 			}
 			else if (obj.name == "zylinderOben")
 			{
 				obj.material = pano2Material;
+				panoBottomObj = obj;
 				//obj.scale.set(1, 0.33, 1);
 			}
 			else if (obj.name == "Wand")
@@ -210,6 +217,7 @@ function setupMaterials()
 			map: panoramaTextureArray[0]
 		}
 	);
+	panoTopTextureIndex = 0;
 	pano1Material.shading = THREE.SmoothShading;
 	//definiert welche Seite gerendert werden soll. Front,Back,Double
 	pano1Material.side = THREE.DoubleSide;
@@ -219,6 +227,7 @@ function setupMaterials()
 			map: panoramaTextureArray[1]
 		}
 	);
+	panoBottomTextureIndex = 1;
 	pano2Material.shading = THREE.SmoothShading;
 	//definiert welche Seite gerendert werden soll. Front,Back,Double
 	pano2Material.side = THREE.DoubleSide;
@@ -367,6 +376,23 @@ function onMouseMove( event )
 
 function onMouseDown( event ) { enableTurn = true; }
 function onMouseUp  ( event ) { enableTurn = false; }
+
+function loadTexture( glTexture, isPanoTop = true )
+{
+	if ( isPanoTop )
+	{
+		changeTexture( panoTopObj.material, glTexture );
+	}
+	else
+	{
+		changeTexture( panoBottomObj.material, glTexture );
+	}
+}
+
+function changeTexture ( glMaterial, glTexture )
+{
+	glMaterial.map = glTexture;
+}
 
 /*
 var customMaterial = new THREE.ShaderMaterial(
