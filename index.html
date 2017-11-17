@@ -63,8 +63,10 @@ let numPadMaterial;
 let debugMode = false;
 let panoTopTextureIndex;
 let panoBottomTextureIndex;
+
 //audio
 let currentAudio = document.getElementById("elevatorMusic1");
+
 // elevator movement
 let elevatorIsMoving = false;
 let elevatorMoveStartedTimestamp = new Date();
@@ -250,6 +252,8 @@ function loadPanoramas()
 		// horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
 		panoramaTextureArray[index].wrapS = THREE.RepeatWrapping;
 		panoramaTextureArray[index].wrapT = THREE.RepeatWrapping;
+		panoramaTextureArray[index].repeat.x = -1;
+
 	});
 	if (debugMode)
 	{
@@ -257,7 +261,8 @@ function loadPanoramas()
 	}
 }
 
-function setupAudioVolume(){
+function setupAudioVolume()
+{
 	let audioTags = document.getElementsByClassName("audioMute");
 	for (let i = 1; i < audioTags.length; i++) {
     	audioTags[i].volume = "0";
@@ -307,36 +312,42 @@ function setupMaterials()
 
 	let textureButtonUp = new THREE.TextureLoader().load( 'img/Textures/buttonRauf.png' );
 	textureButtonUp.wrapS = textureButtonUp.wrapT = THREE.RepeatWrapping;
+	textureButtonUp.repeat.x = -1;
 	buttonUpMaterial = new THREE.MeshLambertMaterial( { map: textureButtonUp } );
 	buttonUpMaterial.shading = THREE.SmoothShading;
 	buttonUpMaterial.side = THREE.DoubleSide;
 
 	let textureButtonDown = new THREE.TextureLoader().load( 'img/Textures/buttonRunter.png' );
 	textureButtonDown.wrapS = textureButtonDown.wrapT = THREE.RepeatWrapping;
+	textureButtonDown.repeat.x = -1;
 	buttonDownMaterial = new THREE.MeshLambertMaterial( { map: textureButtonDown } );
 	buttonDownMaterial.shading = THREE.SmoothShading;
 	buttonDownMaterial.side = THREE.DoubleSide;
 
 	let textureButtonRandomFloor = new THREE.TextureLoader().load( 'img/Textures/buttonRandomFloor.png' );
 	textureButtonRandomFloor.wrapS = textureButtonRandomFloor.wrapT = THREE.RepeatWrapping;
+	textureButtonRandomFloor.repeat.x = -1;
 	buttonRandomFloorMaterial = new THREE.MeshLambertMaterial( { map: textureButtonRandomFloor } );
 	buttonRandomFloorMaterial.shading = THREE.SmoothShading;
 	buttonRandomFloorMaterial.side = THREE.DoubleSide;
 
 	let textureButtonMusik1 = new THREE.TextureLoader().load( 'img/Textures/buttonMusik1.png' );
 	textureButtonMusik1.wrapS = textureButtonMusik1.wrapT = THREE.RepeatWrapping;
+	textureButtonMusik1.repeat.x = -1;
 	buttonMusik1Material = new THREE.MeshLambertMaterial( { map: textureButtonMusik1 } );
 	buttonMusik1Material.shading = THREE.SmoothShading;
 	buttonMusik1Material.side = THREE.DoubleSide;
 
 	let textureButtonMusik2 = new THREE.TextureLoader().load( 'img/Textures/buttonMusik2.png' );
 	textureButtonMusik2.wrapS = textureButtonMusik2.wrapT = THREE.RepeatWrapping;
+	textureButtonMusik2.repeat.x = -1;
 	buttonMusik2Material = new THREE.MeshLambertMaterial( { map: textureButtonMusik2 } );
 	buttonMusik2Material.shading = THREE.SmoothShading;
 	buttonMusik2Material.side = THREE.DoubleSide;
 
 	let textureNumpad = new THREE.TextureLoader().load( 'img/Textures/numPad.png' );
 	textureNumpad.wrapS = textureNumpad.wrapT = THREE.RepeatWrapping;
+	textureNumpad.repeat.x = -1;
 	numPadMaterial = new THREE.MeshLambertMaterial( { map: textureNumpad } );
 	numPadMaterial.shading = THREE.SmoothShading;
 	numPadMaterial.side = THREE.DoubleSide;
@@ -472,36 +483,47 @@ function onClick  ( event )
 	var intersects = raycaster.intersectObjects( objects );
 	if ( intersects.length > 0 )
 	{
-		switch(intersects[0].object.name){
+		switch(intersects[0].object.name)
+		{
 			case "ButtonRauf":
-				//LiftRaufFunktion TODO
+				moveElevator();
 				break;
 			case "ButtonRunter":
-				//LiftRunterFunktion TODO
+				moveElevator(false);
 				break;
 			case "ButtonRandomFloor":
 				//LiftRandomFloorFunktion TODO
 				break;
 			case "ButtonMusik1":
-				if(currentAudio.id != "elevatorMusic1"){
+				if(currentAudio.id != "elevatorMusic1")
+				{
 					currentAudio.volume = 0;
 					currentAudio = document.getElementById("elevatorMusic1");
 					currentAudio.volume = 1;
-			  	}else if(currentAudio.volume == 0){
+			  	}
+			  	else if(currentAudio.volume == 0)
+			  	{
 			  		currentAudio.volume = 1;
-			  	}else{
+			  	}
+			  	else
+			  	{
 			  		currentAudio.volume = 0;
 			  	}
 				//LiftMusikändernFunktion TODO
 				break;
 			case "ButtonMusik2":
-				if(currentAudio.id != "elevatorMusic2"){
+				if(currentAudio.id != "elevatorMusic2")
+				{
 					currentAudio.volume = 0;
 					currentAudio = document.getElementById("elevatorMusic2");
 					currentAudio.volume = 1;
-			  	}else if(currentAudio.volume == 0){
+			  	}
+			  	else if(currentAudio.volume == 0)
+			  	{
 			  		currentAudio.volume = 1;
-			  	}else{
+			  	}
+			  	else
+			  	{
 			  		currentAudio.volume = 0;
 			  	}
 				//LiftMusikänderFunktion TODO
