@@ -88,14 +88,16 @@ function init()
 {
 	//Perspektivische Kammera wird erstellt
 	userCamera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 1, 1000 );
+	/*
 	userCamera.position.z = 2;
 	userCamera.position.y = 0;
 	userCamera.position.x = -20;
+	*/
 
 	// Scene erstellen
 	elevatorScene = new THREE.Scene();
 	// Hintergrund Farbe wird gesetzt
-	var backgroundColor = new THREE.Color(0xFF8822);
+	let backgroundColor = new THREE.Color(0xFF8822);
 	elevatorScene.background = backgroundColor;
 
 	// add Lightsources
@@ -110,8 +112,8 @@ function init()
 	setupMaterials();
 
 	// load the complete Scene
-	var objFile = "objects/SceneAufzug.obj";
-	var loader = new THREE.OBJLoader();
+	let objFile = "objects/SceneAufzug.obj";
+	let loader = new THREE.OBJLoader();
 	loader.load( objFile, function( object )
 	{
 		object.scale.set(1, 1, 1);
@@ -167,7 +169,12 @@ function init()
 		});
 
 		elevatorScene.add( object );
-	} );
+	});
+
+	loader.onLoadComplete = function ()
+	{
+		console.log("load completed");
+	}
 
 	// setup renderer
 	elevatorRenderer = new THREE.WebGLRenderer( {antialias: true} );
@@ -554,8 +561,6 @@ function changeTexture ( glMaterial, glTexture )
 
 function changePanorama ( directionUp = true )
 {
-	let nextIndex = panoramaTextureArray.length -1;
-
 	if ( directionUp )
 	{
 		// set top texture to bottom Pano
@@ -626,7 +631,10 @@ function resetPanoPositions ()
 
 function moveElevator ( moveUp = true )
 {
-	console.log("moveUp", moveUp);
+	if (debugMode)
+	{
+		console.log("moveUp", moveUp);
+	}
 
 	if (!getElevatorIsMoving())
 	{
