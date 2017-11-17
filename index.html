@@ -54,6 +54,20 @@ let debugMode = true;
 let panoTopTextureIndex;
 let panoBottomTextureIndex;
 
+// elevator movement
+let elevatorIsMoving = false;
+let elevatorMoveStartedTimestamp = new Date();
+let elevatorMoveTimeMS = 3000;
+let currentElevatorMovementProgress;
+let panoTopNormalPos;
+let panoBottomNormalPos;
+let wandNormalPos;
+let transitionDistance = {
+		x: 0,
+		y: -255.83,
+		z: 0
+	}
+
 init();
 
 function init()
@@ -92,18 +106,21 @@ function init()
 			if (obj.name == "zylinderUnten")
 			{
 				obj.material = pano1Material;
+				panoTopNormalPos = obj.position.clone();
 				panoTopObj = obj;
 				//obj.scale.set(1, 0.33, 1);
 			}
 			else if (obj.name == "zylinderOben")
 			{
 				obj.material = pano2Material;
+				panoBottomNormalPos = obj.position.clone();
 				panoBottomObj = obj;
 				//obj.scale.set(1, 0.33, 1);
 			}
 			else if (obj.name == "Wand")
 			{
 				obj.material = wallMaterial;
+				wandNormalPos = obj.position.clone();
 			}
 			else if (obj.name == "Aufzug")
 			{
@@ -436,9 +453,97 @@ function changePanorama ( directionUp = true )
 
 function moveElevator ( moveUp = true )
 {
-	changePanorama( !moveUp );
+	//changePanorama( !moveUp );
+
+	if (!getElevatorIsMoving())
+	{
+		if (debugMode)
+		{
+			console.log("move Elevator Started");
+		}
+
+		setElevatorIsMoving(true);
+		elevatorMoveStartedTimestamp = new Date().getTime();
+
+		// Stop Elevator after specified time
+		setTimeout( function ()
+		{
+			setElevatorIsMoving(false);
+			if (debugMode)
+			{
+				console.log("move Elevator Finished");
+			}
+		}, elevatorMoveTimeMS);
+
+		moveElevatorLoopFnc();
+
+	}
 }
 
+function moveElevatorLoopFnc()
+{
+	// number between 0 and 1
+	currentElevatorMovementProgress = progress(
+		elevatorMoveStartedTimestamp,
+		elevatorMoveStartedTimestamp + elevatorMoveTimeMS,
+		new Date().getTime()
+	);
+
+	objects.forEach( function( obj, index, arr )
+	{
+		switch (obj.name)
+		{
+		case "Wand":
+			obj.position.set(wandNormalPos.x + transitionDistance.x * currentElevatorMovementProgress, wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress, wandNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+			break;
+
+		case "zylinderUnten":
+			obj.position.set(panoBottomNormalPos.x + transitionDistance.x * currentElevatorMovementProgress, panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress, panoBottomNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+			break;
+
+		case "zylinderOben":
+			obj.position.set(panoTopNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,  panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress, panoTopNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+			break;
+		}
+	});
+
+	if (debugMode)
+	{
+		//console.log("panoTopNormalPos", panoTopNormalPos);
+		//console.log("panoBottomNormalPos", panoBottomNormalPos);
+		//console.log("wandNormalPos", wandNormalPos);
+		//console.log("currentElevatorMovementProgress", currentElevatorMovementProgress);
+	}
+
+	// recall after 10 miliseconds
+	setTimeout( function ()
+	{
+		if (getElevatorIsMoving())
+		{
+			moveElevatorLoopFnc();
+		}
+	}, 50);
+}
+
+function lerpFullNumbers( startVal, endVal, position )
+{
+	return startVal + (endVal - startVal) * position;
+}
+
+function progress( startVal, endVal, currentValue )
+{
+	return 1 / (endVal - startVal) * (currentValue - startVal);
+}
+
+function getElevatorIsMoving()
+{
+	return elevatorIsMoving;
+}
+
+function setElevatorIsMoving( isMoving )
+{
+	elevatorIsMoving = isMoving;
+}
 /*
 var customMaterial = new THREE.ShaderMaterial(
 {
