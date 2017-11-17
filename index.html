@@ -39,6 +39,7 @@ let turnY = -1.5;
 let turnZ = 0.00;
 let panoXTurn = 0.00;
 const X_AXIS_VECTOR =  new THREE.Vector3( 1, 0, 0 );
+const zylinderOffset = 235;
 
 let raycaster;
 let mouse;
@@ -350,9 +351,9 @@ function animate()
 	{
 		if (object.name == "zylinderOben" || object.name == "zylinderUnten")
 		{
-			object.translateOnAxis(X_AXIS_VECTOR,-235);
+			object.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
 			object.rotation.y = panoXTurn
-			object.translateOnAxis(X_AXIS_VECTOR,235);
+			object.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
 		}
 	});
 }
