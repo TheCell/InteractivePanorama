@@ -114,13 +114,16 @@ function init()
 				case "zylinderUnten":
 					obj.material = pano1Material;
 					panoTopObj = obj;
+					panoTopNormalPos = obj.position.clone();
 					break;
 				case "zylinderOben":
 					obj.material = pano2Material;
 					panoBottomObj = obj;
+					panoBottomNormalPos = obj.position.clone();
 					break;
 				case "Wand":
 					obj.material = wallMaterial;
+					wandNormalPos = obj.position.clone();
 					break;
 				case "Aufzug":
 					obj.material = elevatorMaterial;
@@ -504,9 +507,39 @@ function changePanorama ( directionUp = true )
 	);
 }
 
+function resetPanoPositions ()
+{
+	objects.forEach( function( obj, index, arr )
+	{
+		switch (obj.name)
+		{
+			case "Wand":
+				obj.position.set(
+					wandNormalPos.x,
+					wandNormalPos.y,
+					wandNormalPos.z);
+				break;
+
+			case "zylinderUnten":
+				obj.position.set(
+					panoBottomNormalPos.x,
+					panoBottomNormalPos.y,
+					panoBottomNormalPos.z);
+				break;
+
+			case "zylinderOben":
+				obj.position.set(
+					panoTopNormalPos.x,
+					panoTopNormalPos.y,
+					panoTopNormalPos.z);
+				break;
+		}
+	});
+}
+
 function moveElevator ( moveUp = true )
 {
-	//changePanorama( !moveUp );
+	console.log("moveUp", moveUp);
 
 	if (!getElevatorIsMoving())
 	{
@@ -526,14 +559,23 @@ function moveElevator ( moveUp = true )
 			{
 				console.log("move Elevator Finished");
 			}
+
+			if (moveUp)
+			{
+				changePanorama( !moveUp );
+			}
+			resetPanoPositions ();
 		}, elevatorMoveTimeMS);
 
-		moveElevatorLoopFnc();
-
+		if (!moveUp)
+		{
+			changePanorama( !moveUp );
+		}
+		moveElevatorLoopFnc(moveUp);
 	}
 }
 
-function moveElevatorLoopFnc()
+function moveElevatorLoopFnc( moveUp = true)
 {
 	// number between 0 and 1
 	currentElevatorMovementProgress = progress(
@@ -542,30 +584,73 @@ function moveElevatorLoopFnc()
 		new Date().getTime()
 	);
 
-	objects.forEach( function( obj, index, arr )
+	if (!moveUp)
 	{
-		switch (obj.name)
-		{
-		case "Wand":
-			obj.position.set(wandNormalPos.x + transitionDistance.x * currentElevatorMovementProgress, wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress, wandNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
-			break;
-
-		case "zylinderUnten":
-			obj.position.set(panoBottomNormalPos.x + transitionDistance.x * currentElevatorMovementProgress, panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress, panoBottomNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
-			break;
-
-		case "zylinderOben":
-			obj.position.set(panoTopNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,  panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress, panoTopNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
-			break;
-		}
-	});
+		currentElevatorMovementProgress = 1 - currentElevatorMovementProgress;
+	}
 
 	if (debugMode)
 	{
-		//console.log("panoTopNormalPos", panoTopNormalPos);
-		//console.log("panoBottomNormalPos", panoBottomNormalPos);
-		//console.log("wandNormalPos", wandNormalPos);
-		//console.log("currentElevatorMovementProgress", currentElevatorMovementProgress);
+		console.log("currentElevatorMovementProgress", currentElevatorMovementProgress);
+	}
+
+	if (moveUp)
+	{
+		objects.forEach( function( obj, index, arr )
+		{
+			switch (obj.name)
+			{
+				case "Wand":
+					obj.position.set(
+						wandNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
+						wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
+						wandNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					break;
+
+				case "zylinderUnten":
+					obj.position.set(
+						panoBottomNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
+						panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
+						panoBottomNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					break;
+
+				case "zylinderOben":
+					obj.position.set(
+						panoTopNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
+						 panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
+						 panoTopNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					break;
+			}
+		});
+	}
+	else
+	{
+		objects.forEach( function( obj, index, arr )
+		{
+			switch (obj.name)
+			{
+				case "Wand":
+					obj.position.set(
+						wandNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
+						wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
+						wandNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					break;
+
+				case "zylinderUnten":
+					obj.position.set(
+						panoBottomNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
+						panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
+						panoBottomNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					break;
+
+				case "zylinderOben":
+					obj.position.set(
+						panoTopNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
+						 panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
+						 panoTopNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					break;
+			}
+		});
 	}
 
 	// recall after 10 miliseconds
@@ -573,7 +658,7 @@ function moveElevatorLoopFnc()
 	{
 		if (getElevatorIsMoving())
 		{
-			moveElevatorLoopFnc();
+			moveElevatorLoopFnc(moveUp);
 		}
 	}, 50);
 }
