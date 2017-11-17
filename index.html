@@ -378,7 +378,7 @@ function onMouseMove( event )
 function onMouseDown( event ) { enableTurn = true; }
 function onMouseUp  ( event ) { enableTurn = false; }
 
-function loadTexture( glTexture, isPanoTop = true )
+function replaceTextureOnMaterial( glTexture, isPanoTop = true )
 {
 	if ( isPanoTop )
 	{
@@ -393,6 +393,53 @@ function loadTexture( glTexture, isPanoTop = true )
 function changeTexture ( glMaterial, glTexture )
 {
 	glMaterial.map = glTexture;
+}
+
+function changePanorama ( directionUp = true )
+{
+	let nextIndex = panoramaTextureArray.length -1;
+
+	if ( directionUp )
+	{
+		// set top texture to bottom Pano
+		panoBottomTextureIndex = panoTopTextureIndex;
+		if ( panoTopTextureIndex + 1 < panoramaTextureArray.length )
+		{
+			panoTopTextureIndex = panoTopTextureIndex + 1;
+		}
+		else
+		{
+			panoTopTextureIndex = 0;
+		}
+	}
+	else
+	{
+		panoTopTextureIndex = panoBottomTextureIndex;
+		if ( panoBottomTextureIndex - 1 >= 0 )
+		{
+			panoBottomTextureIndex = panoBottomTextureIndex - 1;
+		}
+		else
+		{
+			panoBottomTextureIndex = panoramaTextureArray.length - 1;
+		}
+	}
+
+	// replace bottom Pano Texture
+	replaceTextureOnMaterial(
+		panoramaTextureArray[panoBottomTextureIndex],
+		false
+	);
+	// replace top Pano Texture
+	replaceTextureOnMaterial(
+		panoramaTextureArray[panoTopTextureIndex],
+		true
+	);
+}
+
+function moveElevator ( moveUp = true )
+{
+	changePanorama( !moveUp );
 }
 
 /*
