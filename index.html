@@ -50,6 +50,12 @@ let pano2Material;
 let plankMaterial;
 let wallMaterial;
 let elevatorMaterial;
+let buttonUpMaterial;
+let buttonDownMaterial;
+let buttonRandomFloorMaterial;
+let buttonMusik1Material;
+let buttonMusik2Material;
+let numPadMaterial;
 let debugMode = true;
 let panoTopTextureIndex;
 let panoBottomTextureIndex;
@@ -89,35 +95,46 @@ function init()
 		object.children[0].material = pano1Material;
 		object.children.forEach( function (obj, index)
 		{
-			if (obj.name == "zylinderUnten")
-			{
-				obj.material = pano1Material;
-				panoTopObj = obj;
-				//obj.scale.set(1, 0.33, 1);
+			switch(obj.name){
+				case "zylinderUnten":
+					obj.material = pano1Material;
+					panoTopObj = obj;
+					break;
+				case "zylinderOben":
+					obj.material = pano2Material;
+					panoBottomObj = obj;
+					break;
+				case "Wand":
+					obj.material = wallMaterial;
+					break;
+				case "Aufzug":
+					obj.material = elevatorMaterial;
+					break;
+				case "AufzugHolz":
+					obj.material = plankMaterial;
+					break;
+				case "AufzugHolz2":
+					obj.material = plankMaterial;
+					break;
+				case "ButtonRauf":
+					obj.material = buttonUpMaterial;
+					break;
+				case "ButtonRunter":
+					obj.material = buttonDownMaterial;
+					break;
+				case "ButtonRandomFloor":
+					obj.material = buttonRandomFloorMaterial;
+					break;
+				case "ButtonMusik1":
+					obj.material = buttonMusik1Material;
+					break;
+				case "ButtonMusik2":
+					obj.material = buttonMusik2Material;
+					break;
+				case "NumPad":
+					obj.material = numPadMaterial;
+					break;
 			}
-			else if (obj.name == "zylinderOben")
-			{
-				obj.material = pano2Material;
-				panoBottomObj = obj;
-				//obj.scale.set(1, 0.33, 1);
-			}
-			else if (obj.name == "Wand")
-			{
-				obj.material = wallMaterial;
-			}
-			else if (obj.name == "Aufzug")
-			{
-				obj.material = elevatorMaterial;
-			}
-			else if (obj.name == "AufzugHolz")
-			{
-				obj.material = plankMaterial;
-			}
-			else if (obj.name == "AufzugHolz2")
-			{
-				obj.material = plankMaterial;
-			}
-
 			objects.push( obj );
 		});
 
@@ -235,7 +252,7 @@ function setupMaterials()
 
 	let texturePlank = new THREE.TextureLoader().load( 'img/Textures/woodenPlanksAll.png' );
 	texturePlank.wrapS = texturePlank.wrapT = THREE.RepeatWrapping;
-	plankMaterial = new THREE.MeshBasicMaterial( { map: texturePlank } );
+	plankMaterial = new THREE.MeshLambertMaterial( { map: texturePlank } );
 	plankMaterial.shading = THREE.SmoothShading;
 	plankMaterial.side = THREE.DoubleSide;
 
@@ -247,9 +264,45 @@ function setupMaterials()
 
 	let textureElevator = new THREE.TextureLoader().load( 'img/Textures/aufzug.png' );
 	textureElevator.wrapS = textureElevator.wrapT = THREE.RepeatWrapping;
-	elevatorMaterial = new THREE.MeshBasicMaterial( { map: textureElevator } );
+	elevatorMaterial = new THREE.MeshLambertMaterial( { map: textureElevator } );
 	elevatorMaterial.shading = THREE.SmoothShading;
 	elevatorMaterial.side = THREE.DoubleSide;
+
+	let textureButtonUp = new THREE.TextureLoader().load( 'img/Textures/buttonRauf.png' );
+	textureButtonUp.wrapS = textureButtonUp.wrapT = THREE.RepeatWrapping;
+	buttonUpMaterial = new THREE.MeshLambertMaterial( { map: textureButtonUp } );
+	buttonUpMaterial.shading = THREE.SmoothShading;
+	buttonUpMaterial.side = THREE.DoubleSide;
+
+	let textureButtonDown = new THREE.TextureLoader().load( 'img/Textures/buttonRunter.png' );
+	textureButtonDown.wrapS = textureButtonDown.wrapT = THREE.RepeatWrapping;
+	buttonDownMaterial = new THREE.MeshLambertMaterial( { map: textureButtonDown } );
+	buttonDownMaterial.shading = THREE.SmoothShading;
+	buttonDownMaterial.side = THREE.DoubleSide;
+
+	let textureButtonRandomFloor = new THREE.TextureLoader().load( 'img/Textures/buttonRandomFloor.png' );
+	textureButtonRandomFloor.wrapS = textureButtonRandomFloor.wrapT = THREE.RepeatWrapping;
+	buttonRandomFloorMaterial = new THREE.MeshLambertMaterial( { map: textureButtonRandomFloor } );
+	buttonRandomFloorMaterial.shading = THREE.SmoothShading;
+	buttonRandomFloorMaterial.side = THREE.DoubleSide;
+
+	let textureButtonMusik1 = new THREE.TextureLoader().load( 'img/Textures/buttonMusik1.png' );
+	textureButtonMusik1.wrapS = textureButtonMusik1.wrapT = THREE.RepeatWrapping;
+	buttonMusik1Material = new THREE.MeshLambertMaterial( { map: textureButtonMusik1 } );
+	buttonMusik1Material.shading = THREE.SmoothShading;
+	buttonMusik1Material.side = THREE.DoubleSide;
+
+	let textureButtonMusik2 = new THREE.TextureLoader().load( 'img/Textures/buttonMusik2.png' );
+	textureButtonMusik2.wrapS = textureButtonMusik2.wrapT = THREE.RepeatWrapping;
+	buttonMusik2Material = new THREE.MeshLambertMaterial( { map: textureButtonMusik2 } );
+	buttonMusik2Material.shading = THREE.SmoothShading;
+	buttonMusik2Material.side = THREE.DoubleSide;
+
+	let textureNumpad = new THREE.TextureLoader().load( 'img/Textures/numPad.png' );
+	textureNumpad.wrapS = textureNumpad.wrapT = THREE.RepeatWrapping;
+	numPadMaterial = new THREE.MeshLambertMaterial( { map: textureNumpad } );
+	numPadMaterial.shading = THREE.SmoothShading;
+	numPadMaterial.side = THREE.DoubleSide;
 }
 
 function onWindowResize()
