@@ -23,6 +23,8 @@
 </div>
 <script src="js/three.js"></script>
 <script src="js/OBJLoader.js"></script>
+<script src="js/loadPanos.js"></script>
+<script src="js/setupMaterials.js"></script>
 
 <script>
 "use strict";
@@ -209,64 +211,7 @@ function init()
 	animate();
 }
 
-function loadPanoramas()
-{
-	// Load all Panoramas
-	if (debugMode)
-	{
-		console.log("loading All Panoramas");
-	}
-	panoramaTextureArray[0] = new THREE.TextureLoader().load( 'img/singleshot.png' );
-	panoramaTextureArray[1] = new THREE.TextureLoader().load( 'img/BallSackDogPano.png' );
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/panorama-atelier-web.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano4Edit.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/luz-am-see.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-1.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-2.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-3.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-4.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-2-1.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-2-2.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-2-3.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-2-4.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-3-1.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-3-2.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-3-3.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-3-4.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-4-1.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-4-2.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-4-3.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-4-4.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-5-1.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-5-2.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-5-3.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-5-4.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-6-1.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-6-2.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-6-3.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-6-4.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-7-1.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-7-2.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-7-3.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-7-4.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-8-1.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-8-2.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-8-3.gif' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-8-4.gif' ));
 
-	panoramaTextureArray.forEach( function (element, index)
-	{
-		// horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
-		panoramaTextureArray[index].wrapS = THREE.RepeatWrapping;
-		panoramaTextureArray[index].wrapT = THREE.RepeatWrapping;
-		panoramaTextureArray[index].repeat.x = -1;
-
-	});
-	if (debugMode)
-	{
-		console.log("loading All Panoramas finished");
-	}
-}
 
 function setupAudioVolume()
 {
@@ -274,90 +219,6 @@ function setupAudioVolume()
 	for (let i = 1; i < audioTags.length; i++) {
     	audioTags[i].volume = "0";
 	}
-}
-
-function setupMaterials()
-{
-	// setup both Panorama Materials
-	pano1Material = new THREE.MeshBasicMaterial(
-		{
-			map: panoramaTextureArray[0]
-		}
-	);
-	panoTopTextureIndex = 0;
-	pano1Material.shading = THREE.SmoothShading;
-	//definiert welche Seite gerendert werden soll. Front,Back,Double
-	pano1Material.side = THREE.DoubleSide;
-
-	pano2Material = new THREE.MeshBasicMaterial(
-		{
-			map: panoramaTextureArray[1]
-		}
-	);
-	panoBottomTextureIndex = 1;
-	pano2Material.shading = THREE.SmoothShading;
-	//definiert welche Seite gerendert werden soll. Front,Back,Double
-	pano2Material.side = THREE.DoubleSide;
-
-	let texturePlank = new THREE.TextureLoader().load( 'img/Textures/woodenPlanksAll.png' );
-	texturePlank.wrapS = texturePlank.wrapT = THREE.RepeatWrapping;
-	plankMaterial = new THREE.MeshLambertMaterial( { map: texturePlank } );
-	plankMaterial.shading = THREE.SmoothShading;
-	plankMaterial.side = THREE.DoubleSide;
-
-	let textureWall = new THREE.TextureLoader().load( 'img/Textures/wand.png' );
-	textureWall.wrapS = textureWall.wrapT = THREE.RepeatWrapping;
-	wallMaterial = new THREE.MeshBasicMaterial( { map: textureWall } );
-	wallMaterial.shading = THREE.SmoothShading;
-	wallMaterial.side = THREE.DoubleSide;
-
-	let textureElevator = new THREE.TextureLoader().load( 'img/Textures/aufzug.png' );
-	textureElevator.wrapS = textureElevator.wrapT = THREE.RepeatWrapping;
-	elevatorMaterial = new THREE.MeshLambertMaterial( { map: textureElevator } );
-	elevatorMaterial.shading = THREE.SmoothShading;
-	elevatorMaterial.side = THREE.DoubleSide;
-
-	let textureButtonUp = new THREE.TextureLoader().load( 'img/Textures/buttonRauf.png' );
-	textureButtonUp.wrapS = textureButtonUp.wrapT = THREE.RepeatWrapping;
-	textureButtonUp.repeat.x = -1;
-	buttonUpMaterial = new THREE.MeshLambertMaterial( { map: textureButtonUp } );
-	buttonUpMaterial.shading = THREE.SmoothShading;
-	buttonUpMaterial.side = THREE.DoubleSide;
-
-	let textureButtonDown = new THREE.TextureLoader().load( 'img/Textures/buttonRunter.png' );
-	textureButtonDown.wrapS = textureButtonDown.wrapT = THREE.RepeatWrapping;
-	textureButtonDown.repeat.x = -1;
-	buttonDownMaterial = new THREE.MeshLambertMaterial( { map: textureButtonDown } );
-	buttonDownMaterial.shading = THREE.SmoothShading;
-	buttonDownMaterial.side = THREE.DoubleSide;
-
-	let textureButtonRandomFloor = new THREE.TextureLoader().load( 'img/Textures/buttonRandomFloor.png' );
-	textureButtonRandomFloor.wrapS = textureButtonRandomFloor.wrapT = THREE.RepeatWrapping;
-	textureButtonRandomFloor.repeat.x = -1;
-	buttonRandomFloorMaterial = new THREE.MeshLambertMaterial( { map: textureButtonRandomFloor } );
-	buttonRandomFloorMaterial.shading = THREE.SmoothShading;
-	buttonRandomFloorMaterial.side = THREE.DoubleSide;
-
-	let textureButtonMusik1 = new THREE.TextureLoader().load( 'img/Textures/buttonMusik1.png' );
-	textureButtonMusik1.wrapS = textureButtonMusik1.wrapT = THREE.RepeatWrapping;
-	textureButtonMusik1.repeat.x = -1;
-	buttonMusik1Material = new THREE.MeshLambertMaterial( { map: textureButtonMusik1 } );
-	buttonMusik1Material.shading = THREE.SmoothShading;
-	buttonMusik1Material.side = THREE.DoubleSide;
-
-	let textureButtonMusik2 = new THREE.TextureLoader().load( 'img/Textures/buttonMusik2.png' );
-	textureButtonMusik2.wrapS = textureButtonMusik2.wrapT = THREE.RepeatWrapping;
-	textureButtonMusik2.repeat.x = -1;
-	buttonMusik2Material = new THREE.MeshLambertMaterial( { map: textureButtonMusik2 } );
-	buttonMusik2Material.shading = THREE.SmoothShading;
-	buttonMusik2Material.side = THREE.DoubleSide;
-
-	let textureNumpad = new THREE.TextureLoader().load( 'img/Textures/numPad.png' );
-	textureNumpad.wrapS = textureNumpad.wrapT = THREE.RepeatWrapping;
-	textureNumpad.repeat.x = -1;
-	numPadMaterial = new THREE.MeshLambertMaterial( { map: textureNumpad } );
-	numPadMaterial.shading = THREE.SmoothShading;
-	numPadMaterial.side = THREE.DoubleSide;
 }
 
 function onWindowResize()
