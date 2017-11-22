@@ -90,6 +90,7 @@ function init()
 {
 	//Perspektivische Kammera wird erstellt
 	userCamera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 1, 1000 );
+	userCamera.rotation.order = 'YXZ';
 	/*
 	userCamera.position.z = 2;
 	userCamera.position.y = 0;
@@ -332,8 +333,8 @@ function onMouseMove( event )
 	if (enableTurn == false)
 	{
 		// yes they are inverted and this needs to be
-		//turnZ += movementY * -0.002;
-		//turnY += movementX * -0.002;
+		turnX += movementY * -0.0035;
+		turnY += movementX * -0.005;
 	}
 	else
 	{
