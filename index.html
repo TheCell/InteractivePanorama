@@ -43,7 +43,7 @@ let enableTurn = false;
 let turnX = 0.00;
 let turnY = -1.5;
 let turnZ = 0.00;
-let panoXTurn = 0.00;
+let panoXTurn = 3.14;
 const X_AXIS_VECTOR =  new THREE.Vector3( 1, 0, 0 );
 const zylinderOffset = 235;
 
@@ -126,12 +126,20 @@ function init()
 			{
 				case "zylinderUnten":
 					obj.material = pano1Material;
+					console.log("zylinderUnten Pos on load: ", obj.position);
 					panoTopObj = obj;
+						panoTopObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
+						panoTopObj.rotation.y = panoXTurn
+						panoTopObj.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
 					panoTopNormalPos = obj.position.clone();
 					break;
 				case "zylinderOben":
 					obj.material = pano2Material;
+					console.log("zylinderOben Pos on load: ", obj.position);
 					panoBottomObj = obj;
+						panoBottomObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
+						panoBottomObj.rotation.y = panoXTurn
+						panoBottomObj.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
 					panoBottomNormalPos = obj.position.clone();
 					break;
 				case "Wand":
@@ -169,14 +177,12 @@ function init()
 
 			objects.push( obj );
 		});
+		console.log("zylinderUnten Pos on load end: ", panoTopObj.position);
+		console.log("zylinderOben Pos on load end: ", panoBottomObj.position);
 
 		elevatorScene.add( object );
+		animate();
 	});
-
-	loader.onLoadComplete = function ()
-	{
-		console.log("load completed");
-	}
 
 	// setup renderer
 	elevatorRenderer = new THREE.WebGLRenderer( {antialias: true} );
@@ -207,8 +213,6 @@ function init()
 	window.addEventListener( 'mousemove', onMouseMove, false );
 	window.addEventListener( 'mousedown', onMouseDown, false );
 	window.addEventListener( 'mouseup', onMouseUp, false );
-
-	animate();
 }
 
 
