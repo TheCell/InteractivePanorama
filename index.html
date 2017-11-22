@@ -126,7 +126,6 @@ function init()
 			{
 				case "zylinderUnten":
 					obj.material = pano1Material;
-					console.log("zylinderUnten Pos on load: ", obj.position);
 					panoTopObj = obj;
 						panoTopObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
 						panoTopObj.rotation.y = panoXTurn
@@ -135,7 +134,6 @@ function init()
 					break;
 				case "zylinderOben":
 					obj.material = pano2Material;
-					console.log("zylinderOben Pos on load: ", obj.position);
 					panoBottomObj = obj;
 						panoBottomObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
 						panoBottomObj.rotation.y = panoXTurn
@@ -177,8 +175,6 @@ function init()
 
 			objects.push( obj );
 		});
-		console.log("zylinderUnten Pos on load end: ", panoTopObj.position);
-		console.log("zylinderOben Pos on load end: ", panoBottomObj.position);
 
 		elevatorScene.add( object );
 		animate();
