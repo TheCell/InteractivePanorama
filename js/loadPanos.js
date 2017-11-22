@@ -13,6 +13,7 @@ function loadPanoramas()
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano4Edit.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/luz-am-see.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/kkl-2.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/brueckenpan.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/BallSackDogPano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-1.gif' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-2.gif' ));
