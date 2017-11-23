@@ -100,8 +100,8 @@ function init()
 
 	// Scene erstellen
 	elevatorScene = new THREE.Scene();
-	let aaAchsen = new THREE.AxisHelper(500);
-	elevatorScene.add(aaAchsen);
+	//let aaAchsen = new THREE.AxisHelper(500);
+	//elevatorScene.add(aaAchsen);
 	// Hintergrund Farbe wird gesetzt
 	let backgroundColor = new THREE.Color(0xFF8822);
 	elevatorScene.background = backgroundColor;
@@ -379,7 +379,6 @@ function onClick  ( event )
 				if (!elevatorIsMoving)
 				{
 					let randomFloorNumber = Math.floor((Math.random() * panoramaTextureArray.length));
-					console.log(randomFloorNumber);
 					moveToFloorNumber(randomFloorNumber);
 				}
 				break;
@@ -665,7 +664,10 @@ function moveToFloorNumber( floorNumber )
 	// move up if floor is higher or down if lower
 	// don't do anything if floor is current floor
 	panoTopTextureIndex = (floorNumber % panoramaTextureArray.length);
-	console.log("panoTopTextureIndex", panoTopTextureIndex);
+	if (debugMode)
+	{
+		console.log("panoTopTextureIndex", panoTopTextureIndex);
+	}
 	// replace top Pano Texture
 	replaceTextureOnMaterial(
 		panoramaTextureArray[panoTopTextureIndex],
