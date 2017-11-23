@@ -1,26 +1,26 @@
-
 function setupMaterials()
 {
-	// setup both Panorama Materials
-	pano1Material = new THREE.MeshBasicMaterial(
-		{
-			map: panoramaTextureArray[0]
-		}
-	);
-	panoTopTextureIndex = 0;
-	pano1Material.shading = THREE.SmoothShading;
-	//definiert welche Seite gerendert werden soll. Front,Back,Double
-	pano1Material.side = THREE.DoubleSide;
+	panoTopTextureIndex = 1;
+	panoBottomTextureIndex = 0;
 
-	pano2Material = new THREE.MeshBasicMaterial(
+	panoTopMaterial = new THREE.MeshBasicMaterial(
 		{
-			map: panoramaTextureArray[1]
+			map: panoramaTextureArray[panoTopTextureIndex]
 		}
 	);
-	panoBottomTextureIndex = 1;
-	pano2Material.shading = THREE.SmoothShading;
+	panoTopMaterial.shading = THREE.SmoothShading;
 	//definiert welche Seite gerendert werden soll. Front,Back,Double
-	pano2Material.side = THREE.DoubleSide;
+	panoTopMaterial.side = THREE.DoubleSide;
+
+	// setup both Panorama Materials
+	panoBottomMaterial = new THREE.MeshBasicMaterial(
+		{
+			map: panoramaTextureArray[panoBottomTextureIndex]
+		}
+	);
+	panoBottomMaterial.shading = THREE.SmoothShading;
+	//definiert welche Seite gerendert werden soll. Front,Back,Double
+	panoBottomMaterial.side = THREE.DoubleSide;
 
 	let texturePlank = new THREE.TextureLoader().load( 'img/Textures/woodenPlanksAll.png' );
 	texturePlank.wrapS = texturePlank.wrapT = THREE.RepeatWrapping;
