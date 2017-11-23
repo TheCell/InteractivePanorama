@@ -27,6 +27,8 @@ function loadPanoramas()
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/beleuchtung.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/bergpano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/Majula_Darksouls2.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/borderkands2_moxxi_by_jigglenomicon-d680uiw.jpg' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/HiddenFolks.png' ));
 	/*
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-2.gif' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-3.gif' ));
