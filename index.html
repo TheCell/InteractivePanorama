@@ -40,6 +40,7 @@ let moveSpeedX,moveSpeedY,moveSpeedZ;
 let posXValue, posYValue, posZValue;
 let moveXMinus, moveYMinus, moveZMinus;
 let enableTurn = false;
+let dontTurn = false;
 let turnX = 0.00;
 let turnY = -1.5;
 let turnZ = 0.00;
@@ -90,6 +91,7 @@ function init()
 {
 	//Perspektivische Kammera wird erstellt
 	userCamera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 1, 1000 );
+	userCamera.rotation.order = 'YXZ';
 	/*
 	userCamera.position.z = 2;
 	userCamera.position.y = 0;
@@ -209,6 +211,7 @@ function init()
 	window.addEventListener( 'mousemove', onMouseMove, false );
 	window.addEventListener( 'mousedown', onMouseDown, false );
 	window.addEventListener( 'mouseup', onMouseUp, false );
+	window.addEventListener( 'contextmenu', onContextMenu, false );
 }
 
 
@@ -326,23 +329,37 @@ function animate()
 
 function onMouseMove( event )
 {
-	var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
-	var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+	if(!dontTurn)
+	{
+		var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+		var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-	if (enableTurn == false)
-	{
-		// yes they are inverted and this needs to be
-		//turnZ += movementY * -0.002;
-		//turnY += movementX * -0.002;
-	}
-	else
-	{
-		panoXTurn += movementX * -0.002;
+		if (enableTurn == false)
+		{
+			// yes they are inverted and this needs to be
+			turnX += movementY * -0.0035;
+			turnY += movementX * -0.005;
+		}
+		else
+		{
+			panoXTurn += movementX * -0.002;
+		}
 	}
 }
-
-function onMouseDown( event ) { enableTurn = true; }
-function onMouseUp  ( event ) { enableTurn = false; }
+function onContextMenu ( event ){ event.preventDefault();}
+function onMouseDown( event )
+{
+	let isRightMb;
+	if("which" in event){isRightMb = event.which == 3}
+	else if("button" in event){isRightMb = event.button == 2}
+	if(!isRightMb){enableTurn = true;}
+	else{ dontTurn = true;}
+}
+function onMouseUp  ( event )
+{
+	enableTurn = false;
+	dontTurn = false;
+}
 function onClick  ( event )
 {
 	mouse.x = ( event.clientX / elevatorRenderer.domElement.clientWidth ) * 2 - 1;
