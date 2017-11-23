@@ -288,39 +288,44 @@ function animate()
 	requestAnimationFrame( animate );
 	elevatorRenderer.render( elevatorScene, userCamera );
 
-	if(moveX)
+	if (debugMode)
 	{
-		posXValue += moveSpeedX;
-	}
-	if(moveY)
-	{
-		posYValue += moveSpeedY;
-	}
-	if(moveZ)
-	{
-		posZValue += moveSpeedZ;
-	}
-	if(moveXMinus)
-	{
-		posXValue -= moveSpeedX;
-	}
-	if(moveYMinus)
-	{
-		posYValue -= moveSpeedY;
-	}
-	if(moveZMinus)
-	{
-		posZValue -= moveSpeedZ;
+		if(moveX)
+		{
+			posXValue += moveSpeedX;
+		}
+		if(moveY)
+		{
+			posYValue += moveSpeedY;
+		}
+		if(moveZ)
+		{
+			posZValue += moveSpeedZ;
+		}
+		if(moveXMinus)
+		{
+			posXValue -= moveSpeedX;
+		}
+		if(moveYMinus)
+		{
+			posYValue -= moveSpeedY;
+		}
+		if(moveZMinus)
+		{
+			posZValue -= moveSpeedZ;
+		}
 	}
 
 	userCamera.rotation.x = turnX;
 	userCamera.rotation.y = turnY;
 	userCamera.rotation.z = turnZ;
 
-	userCamera.position.x = posXValue;
-	userCamera.position.y = posYValue;
-	userCamera.position.z = posZValue;
-
+	if (debugMode)
+	{
+		userCamera.position.x = posXValue;
+		userCamera.position.y = posYValue;
+		userCamera.position.z = posZValue;
+	}
 	panoTopObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
 	panoTopObj.rotation.y = panoXTurn
 	panoTopObj.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
