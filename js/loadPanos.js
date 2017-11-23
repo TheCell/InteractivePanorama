@@ -72,6 +72,8 @@ function loadPanoramas()
 		// horizontal und vertical Texturemapping, Die Textur wird unendlich offt wiederholt
 		panoramaTextureArray[index].wrapS = THREE.RepeatWrapping;
 		panoramaTextureArray[index].wrapT = THREE.RepeatWrapping;
+		panoramaTextureArray[index].magFilter = THREE.LinearMipMapLinearFilter;
+		panoramaTextureArray[index].minFilter = THREE.LinearMipMapLinearFilter;
 		panoramaTextureArray[index].repeat.x = -1;
 
 	});
