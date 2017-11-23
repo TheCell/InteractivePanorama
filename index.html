@@ -40,7 +40,7 @@ let moveSpeedX,moveSpeedY,moveSpeedZ;
 let posXValue, posYValue, posZValue;
 let moveXMinus, moveYMinus, moveZMinus;
 let enableTurn = false;
-let dontTurn = false;
+let enableTurnCamera = false;
 let turnX = 0.00;
 let turnY = -1.5;
 let turnZ = 0.00;
@@ -52,8 +52,8 @@ let raycaster;
 let mouse;
 let objects = []; // all objects that are interactable;
 let panoramaTextureArray = [];
-let pano1Material;
-let pano2Material;
+let panoBottomMaterial;
+let panoTopMaterial;
 let plankMaterial;
 let wallMaterial;
 let elevatorMaterial;
@@ -121,26 +121,26 @@ function init()
 	loader.load( objFile, function( object )
 	{
 		object.scale.set(1, 1, 1);
-		object.children[0].material = pano1Material;
+		object.children[0].material = panoBottomMaterial;
 		object.children.forEach( function (obj, index)
 		{
 			switch(obj.name)
 			{
 				case "zylinderUnten":
-					obj.material = pano1Material;
-					panoTopObj = obj;
-						panoTopObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
-						panoTopObj.rotation.y = panoXTurn
-						panoTopObj.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
-					panoTopNormalPos = obj.position.clone();
-					break;
-				case "zylinderOben":
-					obj.material = pano2Material;
+					obj.material = panoBottomMaterial;
 					panoBottomObj = obj;
 						panoBottomObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
 						panoBottomObj.rotation.y = panoXTurn
 						panoBottomObj.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
 					panoBottomNormalPos = obj.position.clone();
+					break;
+				case "zylinderOben":
+					obj.material = panoTopMaterial;
+					panoTopObj = obj;
+						panoTopObj.translateOnAxis(X_AXIS_VECTOR,-zylinderOffset);
+						panoTopObj.rotation.y = panoXTurn
+						panoTopObj.translateOnAxis(X_AXIS_VECTOR,zylinderOffset);
+					panoTopNormalPos = obj.position.clone();
 					break;
 				case "Wand":
 					obj.material = wallMaterial;
@@ -329,22 +329,19 @@ function animate()
 
 function onMouseMove( event )
 {
-	if(!dontTurn)
-	{
 		var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 		var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-		if (enableTurn == false)
+		if (enableTurnCamera == true)
 		{
 			// yes they are inverted and this needs to be
 			turnX += movementY * -0.0035;
 			turnY += movementX * -0.005;
 		}
-		else
+		if(enableTurn == true)
 		{
 			panoXTurn += movementX * -0.002;
 		}
-	}
 }
 function onContextMenu ( event ){ event.preventDefault();}
 function onMouseDown( event )
@@ -353,12 +350,12 @@ function onMouseDown( event )
 	if("which" in event){isRightMb = event.which == 3}
 	else if("button" in event){isRightMb = event.button == 2}
 	if(!isRightMb){enableTurn = true;}
-	else{ dontTurn = true;}
+	else{ enableTurnCamera = true;}
 }
 function onMouseUp  ( event )
 {
 	enableTurn = false;
-	dontTurn = false;
+	enableTurnCamera = false;
 }
 function onClick  ( event )
 {
@@ -371,13 +368,15 @@ function onClick  ( event )
 		switch(intersects[0].object.name)
 		{
 			case "ButtonRauf":
-				moveElevator();
+				moveElevator(true);
 				break;
 			case "ButtonRunter":
 				moveElevator(false);
 				break;
 			case "ButtonRandomFloor":
-				//LiftRandomFloorFunktion TODO
+				let randomFloorNumber = Math.floor((Math.random() * panoramaTextureArray.length));
+				//	alert(choseFloorNumber);
+				//	alert(panoBottomTextureIndex);
 				break;
 			case "ButtonMusik1":
 				if(currentAudio.id != "elevatorMusic1")
@@ -414,31 +413,35 @@ function onClick  ( event )
 				//LiftMusikänderFunktion TODO
 				break;
 			case "NumPad":
-				//Numpadfunktion TODO
+				let choseFloorNumber = prompt("Wähle einen Stock aus", "0")%panoramaTextureArray.length;
+			//	alert(choseFloorNumber);
+			//	alert(panoBottomTextureIndex);
 				break;
 		}
 	}
 }
 
-function replaceTextureOnMaterial( glTexture, isPanoTop = true )
+function replaceTextureOnMaterial( glTexture, isTopPano = false )
 {
-	if ( isPanoTop )
+	if ( isTopPano )
 	{
-		changeTexture( panoTopObj.material, glTexture );
+		changeTextureTo( panoTopObj.material, glTexture );
 	}
 	else
 	{
-		changeTexture( panoBottomObj.material, glTexture );
+		changeTextureTo( panoBottomObj.material, glTexture );
 	}
 }
 
-function changeTexture ( glMaterial, glTexture )
+function changeTextureTo ( glMaterial, glTexture )
 {
 	glMaterial.map = glTexture;
 }
 
-function changePanorama ( directionUp = true )
+function changePanorama ( directionUp = false )
 {
+	console.log("changePano called");
+
 	if ( directionUp )
 	{
 		// set top texture to bottom Pano
@@ -465,11 +468,18 @@ function changePanorama ( directionUp = true )
 		}
 	}
 
+	//if (debugMode)
+	//{
+		console.log("panoTopTextureIndex", panoTopTextureIndex);
+		console.log("panoBottomTextureIndex", panoBottomTextureIndex);
+	//}
+
 	// replace bottom Pano Texture
 	replaceTextureOnMaterial(
 		panoramaTextureArray[panoBottomTextureIndex],
 		false
 	);
+
 	// replace top Pano Texture
 	replaceTextureOnMaterial(
 		panoramaTextureArray[panoTopTextureIndex],
@@ -507,7 +517,7 @@ function resetPanoPositions ()
 	});
 }
 
-function moveElevator ( moveUp = true )
+function moveElevator ( moveUp = false )
 {
 	if (debugMode)
 	{
@@ -535,20 +545,21 @@ function moveElevator ( moveUp = true )
 
 			if (moveUp)
 			{
-				changePanorama( !moveUp );
+				changePanorama( true );
 			}
 			resetPanoPositions ();
 		}, elevatorMoveTimeMS);
 
 		if (!moveUp)
 		{
-			changePanorama( !moveUp );
+			changePanorama( false );
 		}
+
 		moveElevatorLoopFnc(moveUp);
 	}
 }
 
-function moveElevatorLoopFnc( moveUp = true)
+function moveElevatorLoopFnc( moveUp = false)
 {
 	// number between 0 and 1
 	currentElevatorMovementProgress = progress(
