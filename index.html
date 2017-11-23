@@ -377,7 +377,9 @@ function onClick  ( event )
 				moveElevator(false);
 				break;
 			case "ButtonRandomFloor":
-				//LiftRandomFloorFunktion TODO
+				let randomFloorNumber = Math.floor((Math.random() * panoramaTextureArray.length));
+				//	alert(choseFloorNumber);
+				//	alert(panoBottomTextureIndex);
 				break;
 			case "ButtonMusik1":
 				if(currentAudio.id != "elevatorMusic1")
@@ -414,7 +416,9 @@ function onClick  ( event )
 				//LiftMusikänderFunktion TODO
 				break;
 			case "NumPad":
-				//Numpadfunktion TODO
+				let choseFloorNumber = prompt("Wähle einen Stock aus", "0")%panoramaTextureArray.length;
+			//	alert(choseFloorNumber);
+			//	alert(panoBottomTextureIndex);
 				break;
 		}
 	}
