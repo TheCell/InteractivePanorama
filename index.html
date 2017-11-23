@@ -100,6 +100,8 @@ function init()
 
 	// Scene erstellen
 	elevatorScene = new THREE.Scene();
+	let aaAchsen = new THREE.AxisHelper(500);
+	elevatorScene.add(aaAchsen);
 	// Hintergrund Farbe wird gesetzt
 	let backgroundColor = new THREE.Color(0xFF8822);
 	elevatorScene.background = backgroundColor;
@@ -494,24 +496,18 @@ function resetPanoPositions ()
 		switch (obj.name)
 		{
 			case "Wand":
-				obj.position.set(
-					wandNormalPos.x,
-					wandNormalPos.y,
-					wandNormalPos.z);
+				obj.position.y=
+					wandNormalPos.y;
 				break;
 
 			case "zylinderUnten":
-				obj.position.set(
-					panoBottomNormalPos.x,
-					panoBottomNormalPos.y,
-					panoBottomNormalPos.z);
+				obj.position.y=
+					panoBottomNormalPos.y;
 				break;
 
 			case "zylinderOben":
-				obj.position.set(
-					panoTopNormalPos.x,
-					panoTopNormalPos.y,
-					panoTopNormalPos.z);
+				obj.position.y=
+					panoTopNormalPos.y;
 				break;
 		}
 	});
@@ -585,24 +581,15 @@ function moveElevatorLoopFnc( moveUp = false)
 			switch (obj.name)
 			{
 				case "Wand":
-					obj.position.set(
-						wandNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						wandNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 
 				case "zylinderUnten":
-					obj.position.set(
-						panoBottomNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						panoBottomNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 
 				case "zylinderOben":
-					obj.position.set(
-						panoTopNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						 panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						 panoTopNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 			}
 		});
@@ -614,24 +601,15 @@ function moveElevatorLoopFnc( moveUp = false)
 			switch (obj.name)
 			{
 				case "Wand":
-					obj.position.set(
-						wandNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						wandNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 
 				case "zylinderUnten":
-					obj.position.set(
-						panoBottomNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						panoBottomNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 
 				case "zylinderOben":
-					obj.position.set(
-						panoTopNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						 panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						 panoTopNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y = panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 			}
 		});
