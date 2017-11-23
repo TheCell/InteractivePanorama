@@ -6,30 +6,30 @@ function loadPanoramas()
 		console.log("loading All Panoramas");
 	}
 	//panoramaTextureArray[0] = new THREE.TextureLoader().load( 'img/singleshot.png' );
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/singleshot.png' ));
+	//panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/singleshot.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/panorama-atelier-web.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/marsPanorama.jpg' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/lasercat.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/SonghoyBlues_AlHassidiTerei.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/bergpano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano4Edit.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/luz-am-see.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/legopano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/kkl-2.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/tintin.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/haegar.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/brueckenpano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano4.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/SonghoyBlues_AlHassidiTerei.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/lasercat.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/new-chesus.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/tintin.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano-dach.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/borderkands2_moxxi_by_jigglenomicon-d680uiw.jpg' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano-mitte.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/BallSackDogPano.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/haegar.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-1.gif' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/beleuchtung.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/bergpano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/Majula_Darksouls2.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/borderkands2_moxxi_by_jigglenomicon-d680uiw.jpg' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/marsPanorama.jpg' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/HiddenFolks.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/lispano.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/lispano2.png' ));
 
 	/*
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-2.gif' ));
