@@ -376,9 +376,12 @@ function onClick  ( event )
 				moveElevator(false);
 				break;
 			case "ButtonRandomFloor":
-				let randomFloorNumber = Math.floor((Math.random() * panoramaTextureArray.length));
-				//	alert(choseFloorNumber);
-				//	alert(panoBottomTextureIndex);
+				if (!elevatorIsMoving)
+				{
+					let randomFloorNumber = Math.floor((Math.random() * panoramaTextureArray.length));
+					console.log(randomFloorNumber);
+					moveToFloorNumber(randomFloorNumber);
+				}
 				break;
 			case "ButtonMusik1":
 				if(currentAudio.id != "elevatorMusic1")
@@ -415,9 +418,11 @@ function onClick  ( event )
 				//LiftMusikänderFunktion TODO
 				break;
 			case "NumPad":
-				let choseFloorNumber = prompt("Wähle einen Stock aus", "0")%panoramaTextureArray.length;
-			//	alert(choseFloorNumber);
-			//	alert(panoBottomTextureIndex);
+				if (!elevatorIsMoving)
+				{
+					let choseFloorNumber = prompt("Wähle einen Stock aus", "0")%panoramaTextureArray.length;
+					moveToFloorNumber(choseFloorNumber);
+				}
 				break;
 		}
 	}
@@ -440,11 +445,9 @@ function changeTextureTo ( glMaterial, glTexture )
 	glMaterial.map = glTexture;
 }
 
-function changePanorama ( directionUp = false )
+function changePanorama ( topTextureGoesBott = false )
 {
-	console.log("changePano called");
-
-	if ( directionUp )
+	if ( topTextureGoesBott )
 	{
 		// set top texture to bottom Pano
 		panoBottomTextureIndex = panoTopTextureIndex;
@@ -470,11 +473,11 @@ function changePanorama ( directionUp = false )
 		}
 	}
 
-	//if (debugMode)
-	//{
+	if (debugMode)
+	{
 		console.log("panoTopTextureIndex", panoTopTextureIndex);
 		console.log("panoBottomTextureIndex", panoBottomTextureIndex);
-	//}
+	}
 
 	// replace bottom Pano Texture
 	replaceTextureOnMaterial(
@@ -554,6 +557,13 @@ function moveElevator ( moveUp = false )
 		moveElevatorLoopFnc(moveUp);
 	}
 }
+
+/*
+function moveElevator ( moveUp = false, floorNumber )
+{
+	// body...
+}
+*/
 
 function moveElevatorLoopFnc( moveUp = false)
 {
@@ -644,6 +654,22 @@ function setElevatorIsMoving( isMoving )
 {
 	elevatorIsMoving = isMoving;
 }
+
+function moveToFloorNumber( floorNumber )
+{
+	// move up if floor is higher or down if lower
+	// don't do anything if floor is current floor
+	panoTopTextureIndex = (floorNumber % panoramaTextureArray.length);
+	console.log("panoTopTextureIndex", panoTopTextureIndex);
+	// replace top Pano Texture
+	replaceTextureOnMaterial(
+		panoramaTextureArray[panoTopTextureIndex],
+		true
+	);
+	moveElevator( true );
+
+}
+
 /*
 var customMaterial = new THREE.ShaderMaterial(
 {
