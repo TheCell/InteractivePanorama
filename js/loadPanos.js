@@ -25,6 +25,7 @@ function loadPanoramas()
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/haegar.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-1.gif' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/beleuchtung.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/bergpano.png' ));
 	/*
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-2.gif' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-3.gif' ));
