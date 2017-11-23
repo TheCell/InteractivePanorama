@@ -40,7 +40,7 @@ let moveSpeedX,moveSpeedY,moveSpeedZ;
 let posXValue, posYValue, posZValue;
 let moveXMinus, moveYMinus, moveZMinus;
 let enableTurn = false;
-let dontTurn = false;
+let enableTurnCamera = false;
 let turnX = 0.00;
 let turnY = -1.5;
 let turnZ = 0.00;
@@ -329,22 +329,19 @@ function animate()
 
 function onMouseMove( event )
 {
-	if(!dontTurn)
-	{
 		var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
 		var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-		if (enableTurn == false)
+		if (enableTurnCamera == true)
 		{
 			// yes they are inverted and this needs to be
 			turnX += movementY * -0.0035;
 			turnY += movementX * -0.005;
 		}
-		else
+		if(enableTurn == true)
 		{
 			panoXTurn += movementX * -0.002;
 		}
-	}
 }
 function onContextMenu ( event ){ event.preventDefault();}
 function onMouseDown( event )
@@ -353,12 +350,12 @@ function onMouseDown( event )
 	if("which" in event){isRightMb = event.which == 3}
 	else if("button" in event){isRightMb = event.button == 2}
 	if(!isRightMb){enableTurn = true;}
-	else{ dontTurn = true;}
+	else{ enableTurnCamera = true;}
 }
 function onMouseUp  ( event )
 {
 	enableTurn = false;
-	dontTurn = false;
+	enableTurnCamera = false;
 }
 function onClick  ( event )
 {
