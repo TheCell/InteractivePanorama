@@ -23,6 +23,7 @@ function loadPanoramas()
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/BallSackDogPano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/haegar.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-1.gif' ));
+	/*
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-2.gif' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-3.gif' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-1-4.gif' ));
@@ -54,6 +55,7 @@ function loadPanoramas()
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-8-2.gif' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-8-3.gif' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/mario-8-4.gif' ));
+	*/
 
 	panoramaTextureArray.forEach( function (element, index)
 	{
