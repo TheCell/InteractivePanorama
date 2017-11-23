@@ -100,6 +100,8 @@ function init()
 
 	// Scene erstellen
 	elevatorScene = new THREE.Scene();
+	//let aaAchsen = new THREE.AxisHelper(500);
+	//elevatorScene.add(aaAchsen);
 	// Hintergrund Farbe wird gesetzt
 	let backgroundColor = new THREE.Color(0xFF8822);
 	elevatorScene.background = backgroundColor;
@@ -374,9 +376,11 @@ function onClick  ( event )
 				moveElevator(false);
 				break;
 			case "ButtonRandomFloor":
-				let randomFloorNumber = Math.floor((Math.random() * panoramaTextureArray.length));
-				//	alert(choseFloorNumber);
-				//	alert(panoBottomTextureIndex);
+				if (!elevatorIsMoving)
+				{
+					let randomFloorNumber = Math.floor((Math.random() * panoramaTextureArray.length));
+					moveToFloorNumber(randomFloorNumber);
+				}
 				break;
 			case "ButtonMusik1":
 				if(currentAudio.id != "elevatorMusic1")
@@ -413,9 +417,16 @@ function onClick  ( event )
 				//LiftMusikänderFunktion TODO
 				break;
 			case "NumPad":
-				let choseFloorNumber = prompt("Wähle einen Stock aus", "0")%panoramaTextureArray.length;
-			//	alert(choseFloorNumber);
-			//	alert(panoBottomTextureIndex);
+				if (!elevatorIsMoving)
+				{
+					let choseFloorNumber = prompt("Wähle einen Stock aus", "0");
+
+					if (choseFloorNumber)
+					{
+						choseFloorNumber = choseFloorNumber % panoramaTextureArray.length;
+						moveToFloorNumber(choseFloorNumber);
+					}
+				}
 				break;
 		}
 	}
@@ -438,11 +449,9 @@ function changeTextureTo ( glMaterial, glTexture )
 	glMaterial.map = glTexture;
 }
 
-function changePanorama ( directionUp = false )
+function changePanorama ( topTextureGoesBott = false )
 {
-	console.log("changePano called");
-
-	if ( directionUp )
+	if ( topTextureGoesBott )
 	{
 		// set top texture to bottom Pano
 		panoBottomTextureIndex = panoTopTextureIndex;
@@ -468,11 +477,11 @@ function changePanorama ( directionUp = false )
 		}
 	}
 
-	//if (debugMode)
-	//{
+	if (debugMode)
+	{
 		console.log("panoTopTextureIndex", panoTopTextureIndex);
 		console.log("panoBottomTextureIndex", panoBottomTextureIndex);
-	//}
+	}
 
 	// replace bottom Pano Texture
 	replaceTextureOnMaterial(
@@ -494,24 +503,18 @@ function resetPanoPositions ()
 		switch (obj.name)
 		{
 			case "Wand":
-				obj.position.set(
-					wandNormalPos.x,
-					wandNormalPos.y,
-					wandNormalPos.z);
+				obj.position.y=
+					wandNormalPos.y;
 				break;
 
 			case "zylinderUnten":
-				obj.position.set(
-					panoBottomNormalPos.x,
-					panoBottomNormalPos.y,
-					panoBottomNormalPos.z);
+				obj.position.y=
+					panoBottomNormalPos.y;
 				break;
 
 			case "zylinderOben":
-				obj.position.set(
-					panoTopNormalPos.x,
-					panoTopNormalPos.y,
-					panoTopNormalPos.z);
+				obj.position.y=
+					panoTopNormalPos.y;
 				break;
 		}
 	});
@@ -559,6 +562,13 @@ function moveElevator ( moveUp = false )
 	}
 }
 
+/*
+function moveElevator ( moveUp = false, floorNumber )
+{
+	// body...
+}
+*/
+
 function moveElevatorLoopFnc( moveUp = false)
 {
 	// number between 0 and 1
@@ -585,24 +595,15 @@ function moveElevatorLoopFnc( moveUp = false)
 			switch (obj.name)
 			{
 				case "Wand":
-					obj.position.set(
-						wandNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						wandNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 
 				case "zylinderUnten":
-					obj.position.set(
-						panoBottomNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						panoBottomNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 
 				case "zylinderOben":
-					obj.position.set(
-						panoTopNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						 panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						 panoTopNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 			}
 		});
@@ -614,24 +615,15 @@ function moveElevatorLoopFnc( moveUp = false)
 			switch (obj.name)
 			{
 				case "Wand":
-					obj.position.set(
-						wandNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						wandNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=wandNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 
 				case "zylinderUnten":
-					obj.position.set(
-						panoBottomNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						panoBottomNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y=panoBottomNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 
 				case "zylinderOben":
-					obj.position.set(
-						panoTopNormalPos.x + transitionDistance.x * currentElevatorMovementProgress,
-						 panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress,
-						 panoTopNormalPos.z + transitionDistance.z * currentElevatorMovementProgress);
+					obj.position.y = panoTopNormalPos.y + transitionDistance.y * currentElevatorMovementProgress;
 					break;
 			}
 		});
@@ -666,6 +658,25 @@ function setElevatorIsMoving( isMoving )
 {
 	elevatorIsMoving = isMoving;
 }
+
+function moveToFloorNumber( floorNumber )
+{
+	// move up if floor is higher or down if lower
+	// don't do anything if floor is current floor
+	panoTopTextureIndex = (floorNumber % panoramaTextureArray.length);
+	if (debugMode)
+	{
+		console.log("panoTopTextureIndex", panoTopTextureIndex);
+	}
+	// replace top Pano Texture
+	replaceTextureOnMaterial(
+		panoramaTextureArray[panoTopTextureIndex],
+		true
+	);
+	moveElevator( true );
+
+}
+
 /*
 var customMaterial = new THREE.ShaderMaterial(
 {
