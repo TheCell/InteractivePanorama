@@ -9,6 +9,7 @@ function loadPanoramas()
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/singleshot.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/panorama-atelier-web.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/marsPanorama.jpg' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/lasercat.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/SonghoyBlues_AlHassidiTerei.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano4Edit.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/luz-am-see.png' ));
