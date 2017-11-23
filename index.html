@@ -663,18 +663,20 @@ function moveToFloorNumber( floorNumber )
 {
 	// move up if floor is higher or down if lower
 	// don't do anything if floor is current floor
-	panoTopTextureIndex = (floorNumber % panoramaTextureArray.length);
-	if (debugMode)
+	if (floorNumber != panoBottomTextureIndex)
 	{
-		console.log("panoTopTextureIndex", panoTopTextureIndex);
+		panoTopTextureIndex = (floorNumber % panoramaTextureArray.length);
+		if (debugMode)
+		{
+			console.log("panoTopTextureIndex", panoTopTextureIndex);
+		}
+		// replace top Pano Texture
+		replaceTextureOnMaterial(
+			panoramaTextureArray[panoTopTextureIndex],
+			true
+		);
+		moveElevator( true );
 	}
-	// replace top Pano Texture
-	replaceTextureOnMaterial(
-		panoramaTextureArray[panoTopTextureIndex],
-		true
-	);
-	moveElevator( true );
-
 }
 
 /*
