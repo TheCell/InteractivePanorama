@@ -14,6 +14,7 @@ function loadPanoramas()
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/luz-am-see.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/legopano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/kkl-2.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/tintin.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/brueckenpano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano-4.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano-dach' ));
