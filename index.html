@@ -420,8 +420,13 @@ function onClick  ( event )
 			case "NumPad":
 				if (!elevatorIsMoving)
 				{
-					let choseFloorNumber = prompt("Wähle einen Stock aus", "0")%panoramaTextureArray.length;
-					moveToFloorNumber(choseFloorNumber);
+					let choseFloorNumber = prompt("Wähle einen Stock aus", "0");
+
+					if (choseFloorNumber)
+					{
+						choseFloorNumber = choseFloorNumber % panoramaTextureArray.length;
+						moveToFloorNumber(choseFloorNumber);
+					}
 				}
 				break;
 		}
