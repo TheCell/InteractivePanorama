@@ -22,6 +22,7 @@ function loadPanoramas()
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano4.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/SonghoyBlues_AlHassidiTerei.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano-dach.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/foundingFathers.jpg' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/borderkands2_moxxi_by_jigglenomicon-d680uiw.jpg' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano-mitte.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/BallSackDogPano.png' ));
