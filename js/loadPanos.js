@@ -10,10 +10,9 @@ function loadPanoramas()
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/panorama-atelier-web.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/bergpano.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/moon.jpg' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/hubblePhotos2.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/pano4Edit.png' ));
-	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/luz-am-see.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/legopano.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/hubblePhotos2.png' ));
+	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/luz-am-see.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/kkl-2.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/haegar.png' ));
 	panoramaTextureArray.push(new THREE.TextureLoader().load( 'img/brueckenpano.png' ));
